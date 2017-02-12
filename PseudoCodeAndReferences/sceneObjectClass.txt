@@ -1,0 +1,54 @@
+code example
+
+class sceneObject:monodev, Selectable{
+
+	public dictionary<dictionary> itemSocket
+	public String keyValue;
+	
+	 
+
+	bool addTwinItem (Item) {
+		
+		\\ Check the value of the item to see if it's the right \\corresponding value
+		if (Item.key == keyValue)
+		{
+			itemSocket.add(Item, "rightValue")
+		}
+		else 
+		{
+			return break
+		}
+		
+		return happy \\check tutorial for code logic that checks for \\success or failure on an if statement
+		
+		
+	}
+	
+	void giveKeyValue (String givenKeyValue) {
+		keyValue = givenKeyValue
+	}
+	
+	public override void OnSelected() {
+	
+		if (--doesn't exist yet -- CurserLoaded)
+		{
+			if(addTwinItem(Curser.loadedItem)){
+				Shout hooray
+			} else
+			{
+				Nope, guess again!
+			}
+		}
+		else
+		{
+			\\actually, we'll need to open up a context menu to provide different options
+			loadCurser(this)
+		}
+	
+	}
+
+}
+
+need to provide location and sprite and trigger for making either the right or wrong decision.
+
+I need an object exchange class that will pull all of the different objects based on a scene list. the exchange class will access the list and create all of the objects providing input from that list.

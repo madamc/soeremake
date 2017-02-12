@@ -1,0 +1,23 @@
+Items
+	Potion
+	Sword
+	handkerchief
+	Key
+	Portal
+	NPC
+	
+	Each of these is going to be a different kind of item. Each will have a different context menu. Each item will have to have a type, and depending on what that type is, different context menu items will come up.
+	
+	Items will have a context menu when it's in the scene, and when you use it on another item. The latter context menue will pop up when the curser is equipped with a dictionary object
+	
+	Items that are of the same type, but are unique need to trigger different functions. probably can address this to have items be paired with other items they're meant to interact with only once.
+	
+	What about items you'll use only once?
+	
+	Each item is like a dictionary that can only hold one, two, maybe three objects, it checks when another dictionary is being added to it
+	
+	Curser has a dictionary so that when you select an item, it can compare the key of the object to the item you're interacting with
+	
+	All items are selectable
+	
+	

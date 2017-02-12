@@ -1,0 +1,45 @@
+
+
+Class MarketExchange {
+	
+	public List<StringArray> tempList
+	
+	void Awake ()
+	{
+		tempList = getComponent<ObjectList>
+		Manufacture(tempList)
+	}
+	
+	void Manufacture (List list) 
+	{
+	
+		for (listItem in list) 
+		{
+			var sceneObject = new GameObject("ScnObject" + toString(listItem.id))
+			sceneObject.addComponent<SceneItem>
+			sceneObject.giveKeyValue(listItem.value)
+			
+			\\also add the following values
+				objectType
+				Name
+				Description
+				SpritePath
+				AnimationsPath
+				
+			depending on what the objectType is, additional features will be added
+			e.g.
+			Switch
+				case portal
+					add componentScript
+					
+				
+		}
+	
+	}
+	
+}
+
+class ObjectList {
+	
+	Array<String> savedValues = [1-ObjectType, 2-Name,3-description, 4-spritePath, 5-animationsPath, ]
+}
