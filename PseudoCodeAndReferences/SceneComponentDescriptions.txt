@@ -1,0 +1,15 @@
+This document has a brief explanation of the different kinds of objects that will be in scenes and what their purpose is.
+
+SceneDrawer
+	Has all of the objects needed to be set out into the scene: Characters, items, portals etc. This is essentially the game manager for the scene's specific objects.
+
+Rucksack
+	Has all the objects that will be brought to the scene and that follow the player, like the player, the inventory, and the curser, and the menu(?). This is effectively the game manager for objects that are coming from another scene and will proceed to the next.
+	
+SceneList
+	This has the array of information needed to generate all the objects of the scene. For optimization purposes, don't worry about it yet.
+	
+Mill
+	This is meant to create/instantiate all of the objects from SceneList. For optimization purposes, don't worry about it yet.
+	
+MarketPlace is intended to be a place for the different objects to interact with one another somehow

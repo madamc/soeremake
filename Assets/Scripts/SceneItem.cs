@@ -13,10 +13,10 @@ public class SceneItem : MonoBehaviour {
     public String keyValue;
 
 
-    //public override void OnSelected()
-    //{
-
-    //}
+    public void GiveKeyValue(String givenKeyValue)
+    {
+        keyValue = givenKeyValue;
+    }
 
     bool addTwinItem(SceneItem Item)
     {
@@ -38,9 +38,9 @@ public class SceneItem : MonoBehaviour {
 
     }
 
-    void GiveKeyValue(String givenKeyValue)
+    private void Awake()
     {
-        keyValue = givenKeyValue;
+        
     }
 
 }
