@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
+using System;
 
 public class ActionHandler : Selectable
 {
@@ -36,13 +37,37 @@ public class ActionHandler : Selectable
     public void OnMouseDown()
     {
         
-        var sceneItem = GetComponent<SceneItem>();
-        print("Hey Yo I selected a component!");
+        try {
+            bool itemSelected = false;
+            bool selectingItem = false;
+            var sceneItem = GetComponent<SceneItem>();
 
-        //sceneItem.keyValue = "juice";
-        print("My name is " + ruckSack.keyValue);
-        ruckSack.addTwinItem(sceneItem);
-        ruckSack.keyValue = sceneItem.keyValue;
+            print("Hey Yo I selected a component!");
+            if (ruckSack.cursorSocket.Count > 0)
+            {
+                itemSelected = true;
+            }
+
+            //sceneItem.keyValue = "juice";
+
+            //Not sure if we want to worry about the rucksack's key value anymore.  
+            //print("My name is " + ruckSack.keyValue);
+            if (!ruckSack.isAlreadySelected(sceneItem) && !itemSelected)
+            {
+                ruckSack.addTwinItem(sceneItem);
+                selectingItem = true;
+            }
+            if (!selectingItem && itemSelected)
+            {
+                ruckSack.compareObjectAction(sceneItem);
+            }
+            //ruckSack.keyValue = sceneItem.keyValue;
+        }
+        catch (NullReferenceException n)
+        {
+            Debug.Log("ITEM NOT SET as a SCENEITEM");
+        }
+      
 
     }
 
@@ -56,6 +81,15 @@ public class ActionHandler : Selectable
             spriteRenderer.material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Materials/PlainMat.mat", typeof(Material));
         }
 
+
+        //todo Figure out how to prevent this from firing several times each time you click it.
+        if (Input.GetMouseButtonDown(1)) {
+            Debug.Log("Clearing item selected By Cursor");
+            ruckSack.cursorSocket.Clear();
+            ruckSack.selectedItemKey = "nothing";
+        }
+
+            
 
     }
 

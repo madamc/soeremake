@@ -280,7 +280,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 0}
   selectObject: {fileID: 0}
   spriteRenderer: {fileID: 303457540}
-  ruckSack: {fileID: 0}
+  ruckSack: {fileID: 1038225168}
 --- !u!61 &303457543
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -322,6 +322,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: 
   description: 
+  selectedItemKey: 
   keyValue: 
 --- !u!1 &374896840
 GameObject:
@@ -484,7 +485,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 0}
   selectObject: {fileID: 0}
   spriteRenderer: {fileID: 678690524}
-  ruckSack: {fileID: 0}
+  ruckSack: {fileID: 1038225168}
 --- !u!61 &678690523
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -691,6 +692,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: 
   description: 
+  selectedItemKey: 
   keyValue: 
 --- !u!4 &1038225169
 Transform:
@@ -810,7 +812,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 0}
   selectObject: {fileID: 0}
   spriteRenderer: {fileID: 1291096504}
-  ruckSack: {fileID: 0}
+  ruckSack: {fileID: 1038225168}
 --- !u!61 &1291096507
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -945,7 +947,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 0}
   selectObject: {fileID: 0}
   spriteRenderer: {fileID: 1335769332}
-  ruckSack: {fileID: 0}
+  ruckSack: {fileID: 1038225168}
 --- !u!61 &1335769335
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -987,6 +989,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: 
   description: 
+  selectedItemKey: 
   keyValue: 
 --- !u!1 &1396962144
 GameObject:
