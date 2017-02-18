@@ -16,7 +16,7 @@ public class RuckSack : MonoBehaviour {
     //Initialize the curser's pocket
 	void Awake() {
         //print("This getting caleed!");
-        keyValue = "haloo";
+        cursorSocket = new Dictionary<string, SceneItem>();
     }
 	
 	// Update is called once per frame
@@ -28,8 +28,6 @@ public class RuckSack : MonoBehaviour {
 
     public void addTwinItem(SceneItem item)
     {
-        print("My name is " + item.keyValue);
-        
         // Check the value of the item to see if it's the right \\corresponding value     
         cursorSocket.Add(item.keyValue, item);
         print("My name is " + cursorSocket.Values);
