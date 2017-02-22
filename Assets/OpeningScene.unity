@@ -323,6 +323,7 @@ MonoBehaviour:
   name: 
   description: 
   selectedItemKey: 
+  NormalCursor: {fileID: 0}
   keyValue: 
 --- !u!1 &374896840
 GameObject:
@@ -693,6 +694,7 @@ MonoBehaviour:
   name: 
   description: 
   selectedItemKey: 
+  NormalCursor: {fileID: 2800000, guid: f5b0fc91c4015244b8d8c49a22b686b6, type: 3}
   keyValue: 
 --- !u!4 &1038225169
 Transform:
@@ -990,6 +992,7 @@ MonoBehaviour:
   name: 
   description: 
   selectedItemKey: 
+  NormalCursor: {fileID: 0}
   keyValue: 
 --- !u!1 &1396962144
 GameObject:

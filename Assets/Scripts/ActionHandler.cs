@@ -87,6 +87,7 @@ public class ActionHandler : Selectable
             Debug.Log("Clearing item selected By Cursor");
             ruckSack.cursorSocket.Clear();
             ruckSack.selectedItemKey = "nothing";
+            Cursor.SetCursor(ruckSack.NormalCursor, Vector2.zero, CursorMode.Auto);
         }
 
             

@@ -8,6 +8,7 @@ public class RuckSack : MonoBehaviour {
     public String name;
     public String description;
     public String selectedItemKey;
+    public Texture2D NormalCursor;
 
     public Dictionary<String, SceneItem> cursorSocket;  //dictionary<dictionary> itemSocket
     public String keyValue;
@@ -31,7 +32,12 @@ public class RuckSack : MonoBehaviour {
         // Check the value of the item to see if it's the right \\corresponding value     
         cursorSocket.Add(item.keyValue, item);
         selectedItemKey = item.keyValue;
-        Debug.Log(item.keyValue);
+       Sprite tempsprite= (item.GetComponent<SpriteRenderer>()).sprite;
+        
+        Texture2D temptexture = textureFromSprite(tempsprite);
+
+        Cursor.SetCursor(temptexture, Vector2.zero, CursorMode.Auto);
+ 
     }
 
 
@@ -93,6 +99,24 @@ public class RuckSack : MonoBehaviour {
             return true;
            
         }
+    }
+
+    //Makes a texture from a sprite,  this is used so we can make cursors out of the objects.  
+    public static Texture2D textureFromSprite(Sprite sprite)
+    {
+        if (sprite.rect.width != sprite.texture.width)
+        {
+            Texture2D newText = new Texture2D((int)sprite.rect.width, (int)sprite.rect.height);
+            Color[] newColors = sprite.texture.GetPixels((int)sprite.textureRect.x,
+                                                         (int)sprite.textureRect.y,
+                                                         (int)sprite.textureRect.width,
+                                                         (int)sprite.textureRect.height);
+            newText.SetPixels(newColors);
+            newText.Apply();
+            return newText;
+        }
+        else
+            return sprite.texture;
     }
 
 }
