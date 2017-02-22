@@ -17,7 +17,7 @@ public class MarketPlace : MonoBehaviour {
         chair.GiveKeyValue("IMACHAIR");
         crate.GiveKeyValue("IMACRATE");
 
-        
+
     }   
 
     void Start () {

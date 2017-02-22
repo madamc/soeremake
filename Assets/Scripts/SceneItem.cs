@@ -7,7 +7,9 @@ using UnityEngine.UI;
 public class SceneItem : MonoBehaviour {
 
     public String Name;
+    public bool isPortal = false;
     public String Description;
+  
 
     public Dictionary<String, SceneItem> itemSocket;  //dictionary<dictionary> itemSocket
     public String keyValue;

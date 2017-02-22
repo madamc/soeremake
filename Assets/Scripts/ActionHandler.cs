@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
 using System;
+using UnityEngine.SceneManagement;
 
 public class ActionHandler : Selectable
 {
@@ -40,28 +41,40 @@ public class ActionHandler : Selectable
         try {
             bool itemSelected = false;
             bool selectingItem = false;
+            bool isPortal;
+
             var sceneItem = GetComponent<SceneItem>();
+            isPortal = sceneItem.isPortal;
+            //handle the action if it is NOT a portal.
+            if (!isPortal) { 
+                print("Hey Yo I selected a component!");
+                if (ruckSack.cursorSocket.Count > 0)
+                {
+                    itemSelected = true;
+                }
 
-            print("Hey Yo I selected a component!");
-            if (ruckSack.cursorSocket.Count > 0)
-            {
-                itemSelected = true;
-            }
+                //sceneItem.keyValue = "juice";
 
-            //sceneItem.keyValue = "juice";
-
-            //Not sure if we want to worry about the rucksack's key value anymore.  
-            //print("My name is " + ruckSack.keyValue);
-            if (!ruckSack.isAlreadySelected(sceneItem) && !itemSelected)
+                //Not sure if we want to worry about the rucksack's key value anymore.  
+                //print("My name is " + ruckSack.keyValue);
+                if (!ruckSack.isAlreadySelected(sceneItem) && !itemSelected)
+                {
+                    ruckSack.addTwinItem(sceneItem);
+                    selectingItem = true;
+                }
+                if (!selectingItem && itemSelected)
+                {
+                    ruckSack.compareObjectAction(sceneItem);
+                }
+                    //ruckSack.keyValue = sceneItem.keyValue;
+            }//end if portal
+            else
             {
-                ruckSack.addTwinItem(sceneItem);
-                selectingItem = true;
+                //If you're a portal, do this.  
+                Camera cam=GameObject.Find("Main Camera").GetComponent<Camera>();
+                Zoomer zoom = (Zoomer)(cam.GetComponent<Zoomer>());
+                zoom.ZoomToScene(sceneItem.keyValue, (sceneItem.transform));
             }
-            if (!selectingItem && itemSelected)
-            {
-                ruckSack.compareObjectAction(sceneItem);
-            }
-            //ruckSack.keyValue = sceneItem.keyValue;
         }
         catch (NullReferenceException n)
         {
