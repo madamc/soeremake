@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RuckSack : MonoBehaviour {
 
@@ -12,19 +13,109 @@ public class RuckSack : MonoBehaviour {
 
     public Dictionary<String, SceneItem> cursorSocket;  //dictionary<dictionary> itemSocket
     public String keyValue;
+    public GameObject mouseCursor;
+    private RectTransform mouseTransform;
+    public float horizontalMouseSpeed=10f;
+    public float verticalMouseSpeed = 10f;
+    private bool canCursorMove = true;
+    private Canvas mouseCanvas;
+    private Image mouseImage;
+    private float screenymax;
+    private float screenxmax;
+    public Camera sceneCamera;
+    private bool init = false;
+    void Start()
+    {
+        mouseCursor = GameObject.FindGameObjectWithTag("CursorCanvas");
+        mouseCanvas = mouseCursor.GetComponent<Canvas>();
+        mouseImage = mouseCanvas.GetComponentInChildren<Image>();
+       
 
+        screenymax = Screen.height * 0.95f;
+                      
+        screenxmax = Screen.width * 0.99f;
+      
+
+      
+        mouseTransform = mouseImage.GetComponent<RectTransform>();
+        Cursor.visible = false;
+        init = true;
+    }
     
 	// Use this for initialization
     //Initialize the curser's pocket
 	void Awake() {
+
         cursorSocket = new Dictionary<string, SceneItem>();
         selectedItemKey = "nothing";
+        
+
     }
 	
 	// Update is called once per frame
 	void Update () {
         if (keyValue != null) { 
         }
+        Vector3 delta;
+
+        float h = horizontalMouseSpeed * Input.GetAxis("Mouse X");
+            float v = verticalMouseSpeed * Input.GetAxis("Mouse Y");
+
+        Rect screenRect = new Rect(0, 0, screenxmax+0.1f, screenymax+0.1f);
+        
+        
+        float currentx = mouseTransform.position.x;
+        float currenty = mouseTransform.position.y;
+        //if (currentx < 0 && h < 0)
+        //{
+        //    h = 0;
+        //}
+        //if (currentx > 0 && Mathf.Abs(currentx) >= screenxmax && h > 0)
+        //{
+        //    h = 0;
+        //}
+        //if (currenty < 0 && Mathf.Abs(currenty) >= screenymax && v < 0)
+        //{
+        //    v = 0;
+        //}
+        //if (currenty > 0 && Mathf.Abs(currenty) >= screenxmax && v > 0)
+        //{
+        //    v = 0;
+        //}
+        delta = new Vector3(h, v, 0);
+        //  Vector2 delta = Input.mousePosition;
+
+        if (canCursorMove)
+        {
+
+            //if (!screenRect.Contains(mouseTransform.position))
+            //{
+            //    if (currentx < 0)
+            //    {
+            //        mouseTransform.position = new Vector3(0, mouseTransform.position.y, mouseTransform.position.z);
+            //    }
+            //    if (currentx >= screenxmax)
+            //    {
+            //        mouseTransform.position = new Vector3(screenxmax, mouseTransform.position.y, mouseTransform.position.z);
+            //    }
+            //    if (currenty < 0)
+            //    {
+            //        mouseTransform.position = new Vector3(mouseTransform.position.x, 0, mouseTransform.position.z);
+            //    }
+            //    if (currenty >= screenymax)
+            //    {
+            //        mouseTransform.position = new Vector3(mouseTransform.position.x, screenymax, mouseTransform.position.z);
+            //    }
+            //    return;
+            //}
+
+             mouseTransform.position += delta;
+         
+            //         mouseTransform.position += delta; // moves the virtual cursor
+            // You need to clamp the position to be inside your wanted area here,
+            // otherwise the cursor can go way off screen
+        }
+        
     }
 
     public void addTwinItem(SceneItem item)

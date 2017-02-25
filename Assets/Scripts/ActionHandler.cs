@@ -5,19 +5,21 @@ using UnityEngine.UI;
 using UnityEditor;
 using System;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class ActionHandler : Selectable
 {
     public Selectable selectObject;
     public SpriteRenderer spriteRenderer;
     public RuckSack ruckSack;
+    EventSystem es;
+
 
     private bool isMousedOver;
 
     protected override void Start()
     {
-       
-
+        es = EventSystem.current;
     }
 
     protected override void Awake()
@@ -94,6 +96,7 @@ public class ActionHandler : Selectable
             spriteRenderer.material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Materials/PlainMat.mat", typeof(Material));
         }
 
+        
 
         //todo Figure out how to prevent this from firing several times each time you click it.
         if (Input.GetMouseButtonDown(1)) {
@@ -107,8 +110,18 @@ public class ActionHandler : Selectable
 
     }
 
-    public void OnMouseOver()
+
+    public void OnPointerEnter()
     {
+        Debug.Log("I fired");
+        
+        isMousedOver = true;
+    }
+
+    public void OnMouseEnter()
+    {
+        Debug.Log("I fired");
+        
         isMousedOver = true;
     }
 
