@@ -13,6 +13,7 @@ public class RuckSack : MonoBehaviour {
 
     public Dictionary<String, SceneItem> cursorSocket;  //dictionary<dictionary> itemSocket
     public String keyValue;
+    public GameObject cursorCanvas;
     public GameObject mouseCursor;
     private RectTransform mouseTransform;
     public float horizontalMouseSpeed=10f;
@@ -23,23 +24,26 @@ public class RuckSack : MonoBehaviour {
     private float screenymax;
     private float screenxmax;
     public Camera sceneCamera;
-    private bool init = false;
+    private int selectedObj=0;
+    public List<GameObject> listOfSelectableGameObjects;
+    private bool _inputDelayOn = false;
+    private float _inputDelayTimer=0.0f;
+    public float inputDelayTime = 0.5f;
     void Start()
     {
-        mouseCursor = GameObject.FindGameObjectWithTag("CursorCanvas");
-        mouseCanvas = mouseCursor.GetComponent<Canvas>();
+        listOfSelectableGameObjects = new List<GameObject>();
+        populateListOfSelectableGameObjects(listOfSelectableGameObjects);
+        cursorCanvas = GameObject.Find("CursorCanvas");
+        mouseCanvas = cursorCanvas.GetComponent<Canvas>();
         mouseImage = mouseCanvas.GetComponentInChildren<Image>();
+        sceneCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
        
 
         screenymax = Screen.height * 0.95f;
                       
         screenxmax = Screen.width * 0.99f;
-      
-
-      
         mouseTransform = mouseImage.GetComponent<RectTransform>();
         Cursor.visible = false;
-        init = true;
     }
     
 	// Use this for initialization
@@ -66,56 +70,138 @@ public class RuckSack : MonoBehaviour {
         
         float currentx = mouseTransform.position.x;
         float currenty = mouseTransform.position.y;
-        //if (currentx < 0 && h < 0)
-        //{
-        //    h = 0;
-        //}
-        //if (currentx > 0 && Mathf.Abs(currentx) >= screenxmax && h > 0)
-        //{
-        //    h = 0;
-        //}
-        //if (currenty < 0 && Mathf.Abs(currenty) >= screenymax && v < 0)
-        //{
-        //    v = 0;
-        //}
-        //if (currenty > 0 && Mathf.Abs(currenty) >= screenxmax && v > 0)
-        //{
-        //    v = 0;
-        //}
-        delta = new Vector3(h, v, 0);
-        //  Vector2 delta = Input.mousePosition;
 
+        delta = new Vector3(h, v, 0);
         if (canCursorMove)
         {
 
-            //if (!screenRect.Contains(mouseTransform.position))
-            //{
-            //    if (currentx < 0)
-            //    {
-            //        mouseTransform.position = new Vector3(0, mouseTransform.position.y, mouseTransform.position.z);
-            //    }
-            //    if (currentx >= screenxmax)
-            //    {
-            //        mouseTransform.position = new Vector3(screenxmax, mouseTransform.position.y, mouseTransform.position.z);
-            //    }
-            //    if (currenty < 0)
-            //    {
-            //        mouseTransform.position = new Vector3(mouseTransform.position.x, 0, mouseTransform.position.z);
-            //    }
-            //    if (currenty >= screenymax)
-            //    {
-            //        mouseTransform.position = new Vector3(mouseTransform.position.x, screenymax, mouseTransform.position.z);
-            //    }
-            //    return;
-            //}
+            if (!screenRect.Contains(mouseTransform.position))
+            {
+                if (currentx < 0)
+                {
+                    mouseTransform.position = new Vector3(0, mouseTransform.position.y, mouseTransform.position.z);
+                }
+                if (currentx >= screenxmax)
+                {
+                    mouseTransform.position = new Vector3(screenxmax, mouseTransform.position.y, mouseTransform.position.z);
+                }
+                if (currenty < 0)
+                {
+                    mouseTransform.position = new Vector3(mouseTransform.position.x, 0, mouseTransform.position.z);
+                }
+                if (currenty >= screenymax)
+                {
+                    mouseTransform.position = new Vector3(mouseTransform.position.x, screenymax, mouseTransform.position.z);
+                }
+                return;
+            }
 
-             mouseTransform.position += delta;
+            mouseTransform.position += delta;
          
             //         mouseTransform.position += delta; // moves the virtual cursor
             // You need to clamp the position to be inside your wanted area here,
             // otherwise the cursor can go way off screen
         }
-        
+
+        bool leftdirection = Input.GetButtonDown("LeftBumper");
+        bool rightdirection = Input.GetButtonDown("RightBumper");
+
+        if (_inputDelayOn) {
+
+            _inputDelayTimer += Time.deltaTime;
+            if (_inputDelayTimer >= inputDelayTime) {
+                _inputDelayOn = false;
+                _inputDelayTimer = 0.0f;
+            }
+        }
+
+      
+
+        if (!_inputDelayOn) {
+           
+            int count = listOfSelectableGameObjects.Count;
+            for (int i = 0; i < listOfSelectableGameObjects.Count; i++)
+            {
+                if (listOfSelectableGameObjects[i].GetInstanceID() == this.gameObject.GetInstanceID())
+                {
+                    selectedObj= i;
+              
+                }
+            }
+
+
+            if (leftdirection )
+            {
+                if (_inputDelayOn) return;
+                Debug.Log("howManyLeft");
+                if (selectedObj == 0)
+                {
+                    selectedObj = listOfSelectableGameObjects.Count - 1;
+                    mouseTransform.position = sceneCamera.WorldToScreenPoint(listOfSelectableGameObjects[listOfSelectableGameObjects.Count - 1].transform.position);
+                }
+                else { 
+                mouseTransform.position = sceneCamera.WorldToScreenPoint(listOfSelectableGameObjects[selectedObj-1].transform.position);
+                    selectedObj--;
+            
+                }
+                _inputDelayOn = true;
+                return;
+            }
+
+            if (rightdirection)
+            {
+                if (this._inputDelayOn)
+                {
+                    Debug.Log("how come this isn't sotpping this train?");
+                    return;
+                }
+                Debug.Log(_inputDelayOn);
+                Debug.Log("howManyRight");
+                if (selectedObj == listOfSelectableGameObjects.Count - 1)
+                {
+                    Vector2 newvec = sceneCamera.WorldToScreenPoint(new Vector2(
+                        listOfSelectableGameObjects[0].transform.position.x,
+                        listOfSelectableGameObjects[0].transform.position.y));
+                    newvec.y = newvec.y +mouseTransform.rect.height;
+                    mouseTransform.position = newvec;
+                    selectedObj = 0;
+                }
+                else
+                {
+                    Vector2 newvec= sceneCamera.WorldToScreenPoint(new Vector2(
+                        listOfSelectableGameObjects[selectedObj + 1].transform.position.x,
+                        listOfSelectableGameObjects[selectedObj + 1].transform.position.y));
+                   
+                    mouseTransform.position = newvec;
+                    selectedObj++;
+                    
+                }
+               this._inputDelayOn = true;
+                return;
+            }
+
+        }//input delay
+
+        if (!leftdirection && !rightdirection)
+        {
+            _inputDelayOn = false;
+        }
+
+
+
+
+    }
+    private int SortByPositionX(GameObject g1, GameObject g2)
+    {
+        return g1.transform.position.x.CompareTo(g2.transform.position.x);
+    }
+
+    private void populateListOfSelectableGameObjects(List<GameObject> goList)
+    {
+      goList=new List<GameObject>( GameObject.FindGameObjectsWithTag("SelectableObject"));
+        goList.Sort(SortByPositionX);
+        this.listOfSelectableGameObjects = goList;
+
     }
 
     public void addTwinItem(SceneItem item)
@@ -124,10 +210,7 @@ public class RuckSack : MonoBehaviour {
         cursorSocket.Add(item.keyValue, item);
         selectedItemKey = item.keyValue;
        Sprite tempsprite= (item.GetComponent<SpriteRenderer>()).sprite;
-        
-        Texture2D temptexture = textureFromSprite(tempsprite);
-
-        Cursor.SetCursor(temptexture, Vector2.zero, CursorMode.Auto);
+        mouseImage.sprite = tempsprite;
  
     }
 
@@ -192,6 +275,8 @@ public class RuckSack : MonoBehaviour {
         }
     }
 
+
+    //todo might not need this
     //Makes a texture from a sprite,  this is used so we can make cursors out of the objects.  
     public static Texture2D textureFromSprite(Sprite sprite)
     {
