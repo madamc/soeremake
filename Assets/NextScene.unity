@@ -235,7 +235,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 303457539}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.88, y: -4.04, z: 0}
+  m_LocalPosition: {x: -10, y: 0, z: 0}
   m_LocalScale: {x: 0.28943264, y: 0.32212347, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -281,7 +281,6 @@ MonoBehaviour:
   spriteRenderer: {fileID: 303457540}
   ruckSack: {fileID: 1038225168}
   cursorobj: {fileID: 832647309}
-  OrderInScene: 2
 --- !u!61 &303457543
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -364,7 +363,7 @@ GameObject:
   - component: {fileID: 377772539}
   - component: {fileID: 377772538}
   m_Layer: 0
-  m_Name: portalToNextScene
+  m_Name: portalToOpeningScene
   m_TagString: SelectableObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -397,7 +396,7 @@ MonoBehaviour:
   Name: portalToNextScene
   isPortal: 1
   Description: 
-  keyValue: NextScene
+  keyValue: OpeningScene
 --- !u!61 &377772539
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -452,7 +451,6 @@ MonoBehaviour:
   spriteRenderer: {fileID: 377772541}
   ruckSack: {fileID: 1038225168}
   cursorobj: {fileID: 832647309}
-  OrderInScene: 1
 --- !u!212 &377772541
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -611,7 +609,6 @@ MonoBehaviour:
   spriteRenderer: {fileID: 678690524}
   ruckSack: {fileID: 1038225168}
   cursorobj: {fileID: 832647309}
-  OrderInScene: 0
 --- !u!61 &678690523
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1039,7 +1036,6 @@ MonoBehaviour:
   spriteRenderer: {fileID: 1291096504}
   ruckSack: {fileID: 1038225168}
   cursorobj: {fileID: 832647309}
-  OrderInScene: 3
 --- !u!61 &1291096507
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1176,7 +1172,6 @@ MonoBehaviour:
   spriteRenderer: {fileID: 1335769332}
   ruckSack: {fileID: 1038225168}
   cursorobj: {fileID: 832647309}
-  OrderInScene: 0
 --- !u!61 &1335769335
 BoxCollider2D:
   m_ObjectHideFlags: 0

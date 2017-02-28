@@ -129,7 +129,9 @@ public class RuckSack : MonoBehaviour {
                 }
             }
 
-
+            //on left bumper or q key, this will cycle through the listOfSelectableGameObjects list, which is
+            //populated at runtime with all objects tagged "selectable" on the screen.  They are sorted by x position
+            //to create a logical order for the player.  
             if (leftdirection )
             {
                 if (_inputDelayOn) return;
@@ -137,10 +139,21 @@ public class RuckSack : MonoBehaviour {
                 if (selectedObj == 0)
                 {
                     selectedObj = listOfSelectableGameObjects.Count - 1;
-                    mouseTransform.position = sceneCamera.WorldToScreenPoint(listOfSelectableGameObjects[listOfSelectableGameObjects.Count - 1].transform.position);
+                    Vector2 newvec = sceneCamera.WorldToScreenPoint(new Vector2(
+                        listOfSelectableGameObjects[listOfSelectableGameObjects.Count - 1].transform.position.x,
+                        listOfSelectableGameObjects[listOfSelectableGameObjects.Count - 1].transform.position.y));
+                    newvec.y = newvec.y + listOfSelectableGameObjects[0].transform.localScale.y *
+                        listOfSelectableGameObjects[listOfSelectableGameObjects.Count -1].GetComponent<SpriteRenderer>().sprite.bounds.size.y;
+                    mouseTransform.position =newvec;
                 }
-                else { 
-                mouseTransform.position = sceneCamera.WorldToScreenPoint(listOfSelectableGameObjects[selectedObj-1].transform.position);
+                else
+                {
+                    Vector2 newvec = sceneCamera.WorldToScreenPoint(new Vector2(
+                    listOfSelectableGameObjects[selectedObj - 1].transform.position.x,
+                    listOfSelectableGameObjects[selectedObj - 1].transform.position.y));
+                    newvec.y = newvec.y + listOfSelectableGameObjects[0].transform.localScale.y *
+                       listOfSelectableGameObjects[selectedObj-1].GetComponent<SpriteRenderer>().sprite.bounds.size.y;
+                       mouseTransform.position = newvec;
                     selectedObj--;
             
                 }
@@ -162,7 +175,9 @@ public class RuckSack : MonoBehaviour {
                     Vector2 newvec = sceneCamera.WorldToScreenPoint(new Vector2(
                         listOfSelectableGameObjects[0].transform.position.x,
                         listOfSelectableGameObjects[0].transform.position.y));
-                    newvec.y = newvec.y +mouseTransform.rect.height;
+                    newvec.y = newvec.y + listOfSelectableGameObjects[0].transform.localScale.y * listOfSelectableGameObjects[0].GetComponent<SpriteRenderer>().sprite.bounds.size.y;
+                    
+
                     mouseTransform.position = newvec;
                     selectedObj = 0;
                 }
@@ -171,7 +186,8 @@ public class RuckSack : MonoBehaviour {
                     Vector2 newvec= sceneCamera.WorldToScreenPoint(new Vector2(
                         listOfSelectableGameObjects[selectedObj + 1].transform.position.x,
                         listOfSelectableGameObjects[selectedObj + 1].transform.position.y));
-                   
+                    newvec.y = newvec.y + listOfSelectableGameObjects[selectedObj + 1].transform.localScale.y 
+                        * listOfSelectableGameObjects[selectedObj + 1].GetComponent<SpriteRenderer>().sprite.bounds.size.y;
                     mouseTransform.position = newvec;
                     selectedObj++;
                     
