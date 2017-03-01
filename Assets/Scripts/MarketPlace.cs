@@ -10,12 +10,14 @@ public class MarketPlace : MonoBehaviour {
     {
         print("This getting caleed!");
         var couch = GameObject.Find("couch").GetComponent<SceneItem>();
+        var table = GameObject.Find("table").GetComponent<SceneItem>();
         var chair = GameObject.Find("chair").GetComponent<SceneItem>();
         var crate = GameObject.Find("crate").GetComponent<SceneItem>();
 
         couch.GiveKeyValue("IMACOUCH");
         chair.GiveKeyValue("IMACHAIR");
         crate.GiveKeyValue("IMACRATE");
+        table.GiveKeyValue("IMATABLE");
 
 
     }   
