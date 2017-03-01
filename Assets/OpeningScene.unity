@@ -200,6 +200,7 @@ GameObject:
   - component: {fileID: 303457542}
   - component: {fileID: 303457543}
   - component: {fileID: 303457544}
+  - component: {fileID: 303457545}
   m_Layer: 0
   m_Name: couch
   m_TagString: SelectableObject
@@ -250,7 +251,7 @@ Transform:
   m_GameObject: {fileID: 303457539}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 59.2, y: -9.19, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 5, y: 5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 6
@@ -324,6 +325,19 @@ MonoBehaviour:
   isPortal: 0
   Description: 
   keyValue: 
+--- !u!114 &303457545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 303457539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 887a2a100db59a847b7f4d04d37aa0a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textureHeight: 0
+  textureWidth: 0
 --- !u!1 &374896840
 GameObject:
   m_ObjectHideFlags: 0
@@ -591,6 +605,7 @@ GameObject:
   - component: {fileID: 539760532}
   - component: {fileID: 539760531}
   - component: {fileID: 539760530}
+  - component: {fileID: 539760535}
   m_Layer: 0
   m_Name: table
   m_TagString: SelectableObject
@@ -715,6 +730,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &539760535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 539760529}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 887a2a100db59a847b7f4d04d37aa0a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textureHeight: 0
+  textureWidth: 0
 --- !u!1 &678690521
 GameObject:
   m_ObjectHideFlags: 0
