@@ -281,7 +281,6 @@ MonoBehaviour:
   spriteRenderer: {fileID: 303457540}
   ruckSack: {fileID: 1038225168}
   cursorobj: {fileID: 832647309}
-  OrderInScene: 2
 --- !u!61 &303457543
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -452,7 +451,6 @@ MonoBehaviour:
   spriteRenderer: {fileID: 377772541}
   ruckSack: {fileID: 1038225168}
   cursorobj: {fileID: 832647309}
-  OrderInScene: 1
 --- !u!212 &377772541
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -611,7 +609,6 @@ MonoBehaviour:
   spriteRenderer: {fileID: 678690524}
   ruckSack: {fileID: 1038225168}
   cursorobj: {fileID: 832647309}
-  OrderInScene: 0
 --- !u!61 &678690523
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -914,8 +911,8 @@ MonoBehaviour:
   keyValue: 
   cursorCanvas: {fileID: 1528868450}
   mouseCursor: {fileID: 832647309}
-  horizontalMouseSpeed: 20
-  verticalMouseSpeed: 20
+  horizontalMouseSpeed: 30
+  verticalMouseSpeed: 30
   sceneCamera: {fileID: 888216535}
   listOfSelectableGameObjects: []
   inputDelayTime: 0.3
@@ -1039,7 +1036,6 @@ MonoBehaviour:
   spriteRenderer: {fileID: 1291096504}
   ruckSack: {fileID: 1038225168}
   cursorobj: {fileID: 832647309}
-  OrderInScene: 3
 --- !u!61 &1291096507
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1176,7 +1172,6 @@ MonoBehaviour:
   spriteRenderer: {fileID: 1335769332}
   ruckSack: {fileID: 1038225168}
   cursorobj: {fileID: 832647309}
-  OrderInScene: 0
 --- !u!61 &1335769335
 BoxCollider2D:
   m_ObjectHideFlags: 0
