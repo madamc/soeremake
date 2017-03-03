@@ -32,8 +32,18 @@ public class RuckSack : MonoBehaviour {
     GameObject inventorycanvas;
     void Start()
     {
+
+        sceneCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
+        screenymax = Screen.height * 0.95f;
+
+        screenxmax = Screen.width * 0.99f;
         //hide the inventory
         inventorycanvas = GameObject.Find("InventoryCanvas");
+        RectTransform invRectTransform=inventorycanvas.GetComponent<RectTransform>();
+        invRectTransform.localScale = new Vector2(2, 2);
+     //   invRectTransform.sizeDelta = new Vector2(Screen.width, Screen.height);
+        
+     //   invRectTransform.position = new Vector2(0 - (Screen.width/2), -1 * Screen.height / 2);
         inventorycanvas.SetActive(false);
 
         listOfSelectableGameObjects = new List<GameObject>();
@@ -41,12 +51,10 @@ public class RuckSack : MonoBehaviour {
         cursorCanvas = GameObject.Find("CursorCanvas");
         mouseCanvas = cursorCanvas.GetComponent<Canvas>();
         mouseImage = mouseCanvas.GetComponentInChildren<Image>();
-        sceneCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
+        
        
 
-        screenymax = Screen.height * 0.95f;
-                      
-        screenxmax = Screen.width * 0.99f;
+      
         mouseTransform = mouseImage.GetComponent<RectTransform>();
         Cursor.visible = false;
     }
@@ -124,7 +132,7 @@ public class RuckSack : MonoBehaviour {
 
 
         if (inventory) {
-            if (inventorycanvas.active)
+            if (inventorycanvas.activeSelf)
             {
                 inventorycanvas.SetActive(false);
             }
@@ -241,7 +249,14 @@ public class RuckSack : MonoBehaviour {
         // Check the value of the item to see if it's the right \\corresponding value     
         cursorSocket.Add(item.keyValue, item);
         selectedItemKey = item.keyValue;
-       Sprite tempsprite= (item.GetComponent<SpriteRenderer>()).sprite;
+        Sprite tempsprite;
+        if (item.GetComponent<SpriteRenderer>() != null) { 
+        tempsprite= (item.GetComponent<SpriteRenderer>()).sprite;
+        }
+        else
+        {
+            tempsprite = (item.GetComponent<Image>().sprite);
+        }
         mouseImage.sprite = tempsprite;
  
     }

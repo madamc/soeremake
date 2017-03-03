@@ -77,16 +77,13 @@ public class ActionHandler : Selectable
                 ruckSack.NormalCursor.height), new Vector2(0.5f, 0.5f));
         }
 
-
-
-
-        
-
-
-        //This checks to see what is overlapping with the cursor
         Vector2 mousev = cam.ScreenToWorldPoint(cursorobj.transform.position);
+          
+        //This checks to see what is overlapping with the cursor
+
         Collider2D[] col = Physics2D.OverlapPointAll(mousev);
         
+   
 
         if (col.Length > 0 && sceneItem != null)
         {
