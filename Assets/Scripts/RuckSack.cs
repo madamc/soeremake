@@ -29,8 +29,13 @@ public class RuckSack : MonoBehaviour {
     private bool _inputDelayOn = false;
     private float _inputDelayTimer=0.0f;
     public float inputDelayTime = 0.5f;
+    GameObject inventorycanvas;
     void Start()
     {
+        //hide the inventory
+        inventorycanvas = GameObject.Find("InventoryCanvas");
+        inventorycanvas.SetActive(false);
+
         listOfSelectableGameObjects = new List<GameObject>();
         populateListOfSelectableGameObjects(listOfSelectableGameObjects);
         cursorCanvas = GameObject.Find("CursorCanvas");
@@ -95,13 +100,15 @@ public class RuckSack : MonoBehaviour {
                 }
                 return;
             }
-
+            //todo make it so if it will take it out of bounds to set it to the bound itself.  
             mouseTransform.position += delta;
          
             //         mouseTransform.position += delta; // moves the virtual cursor
             // You need to clamp the position to be inside your wanted area here,
             // otherwise the cursor can go way off screen
         }
+
+        bool inventory = Input.GetButtonDown("Inventory");
 
         bool leftdirection = Input.GetButtonDown("LeftBumper");
         bool rightdirection = Input.GetButtonDown("RightBumper");
@@ -115,7 +122,16 @@ public class RuckSack : MonoBehaviour {
             }
         }
 
-      
+
+        if (inventory) {
+            if (inventorycanvas.active)
+            {
+                inventorycanvas.SetActive(false);
+            }
+            else { 
+                inventorycanvas.SetActive(true);
+            }
+        }
 
         if (!_inputDelayOn) {
            
@@ -142,8 +158,8 @@ public class RuckSack : MonoBehaviour {
                     Vector2 newvec = sceneCamera.WorldToScreenPoint(new Vector2(
                         listOfSelectableGameObjects[listOfSelectableGameObjects.Count - 1].transform.position.x,
                         listOfSelectableGameObjects[listOfSelectableGameObjects.Count - 1].transform.position.y));
-                    newvec.y = newvec.y + listOfSelectableGameObjects[0].transform.localScale.y *
-                        listOfSelectableGameObjects[listOfSelectableGameObjects.Count -1].GetComponent<SpriteRenderer>().sprite.bounds.size.y;
+             //       newvec.y = newvec.y + listOfSelectableGameObjects[0].transform.localScale.y *
+               //         listOfSelectableGameObjects[listOfSelectableGameObjects.Count -1].GetComponent<SpriteRenderer>().sprite.bounds.size.y;
                     mouseTransform.position =newvec;
                 }
                 else
@@ -151,8 +167,8 @@ public class RuckSack : MonoBehaviour {
                     Vector2 newvec = sceneCamera.WorldToScreenPoint(new Vector2(
                     listOfSelectableGameObjects[selectedObj - 1].transform.position.x,
                     listOfSelectableGameObjects[selectedObj - 1].transform.position.y));
-                    newvec.y = newvec.y + listOfSelectableGameObjects[0].transform.localScale.y *
-                       listOfSelectableGameObjects[selectedObj-1].GetComponent<SpriteRenderer>().sprite.bounds.size.y;
+             //       newvec.y = newvec.y + listOfSelectableGameObjects[0].transform.localScale.y *
+             //          listOfSelectableGameObjects[selectedObj-1].GetComponent<SpriteRenderer>().sprite.bounds.size.y;
                        mouseTransform.position = newvec;
                     selectedObj--;
             
@@ -175,7 +191,7 @@ public class RuckSack : MonoBehaviour {
                     Vector2 newvec = sceneCamera.WorldToScreenPoint(new Vector2(
                         listOfSelectableGameObjects[0].transform.position.x,
                         listOfSelectableGameObjects[0].transform.position.y));
-                    newvec.y = newvec.y + listOfSelectableGameObjects[0].transform.localScale.y * listOfSelectableGameObjects[0].GetComponent<SpriteRenderer>().sprite.bounds.size.y;
+             //       newvec.y = newvec.y + listOfSelectableGameObjects[0].transform.localScale.y * listOfSelectableGameObjects[0].GetComponent<SpriteRenderer>().sprite.bounds.size.y;
                     
 
                     mouseTransform.position = newvec;
@@ -186,8 +202,8 @@ public class RuckSack : MonoBehaviour {
                     Vector2 newvec= sceneCamera.WorldToScreenPoint(new Vector2(
                         listOfSelectableGameObjects[selectedObj + 1].transform.position.x,
                         listOfSelectableGameObjects[selectedObj + 1].transform.position.y));
-                    newvec.y = newvec.y + listOfSelectableGameObjects[selectedObj + 1].transform.localScale.y 
-                        * listOfSelectableGameObjects[selectedObj + 1].GetComponent<SpriteRenderer>().sprite.bounds.size.y;
+              //      newvec.y = newvec.y + listOfSelectableGameObjects[selectedObj + 1].transform.localScale.y 
+              //          * listOfSelectableGameObjects[selectedObj + 1].GetComponent<SpriteRenderer>().sprite.bounds.size.y;
                     mouseTransform.position = newvec;
                     selectedObj++;
                     
@@ -202,7 +218,7 @@ public class RuckSack : MonoBehaviour {
         {
             _inputDelayOn = false;
         }
-
+        
 
 
 

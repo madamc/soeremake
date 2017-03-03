@@ -18,9 +18,18 @@ public class ScaleItem : MonoBehaviour {
         var newWidth = Mathf.Ceil(((textureWidth) * PixelPerfectCamera.scale));
         var newHeight = Mathf.Ceil(((textureHeight) * PixelPerfectCamera.scale));
 
+        //Adjust box collider
+        UpdateCollider();
+
         //This sets the scale of the background transform to coorespond to the screen
         transform.localScale = new Vector3((newWidth/textureWidth), (newHeight/textureHeight), 2);
 
      //   GetComponent<Renderer>().material.mainTextureScale = new Vector3((newWidth/textureWidth), (newHeight/textureHeight), 2);
+    }
+
+    void UpdateCollider()
+    {
+        gameObject.GetComponent<BoxCollider2D>().size = gameObject.GetComponent<SpriteRenderer>().sprite.bounds.size;
+        gameObject.GetComponent<BoxCollider2D>().offset = gameObject.GetComponent<SpriteRenderer>().sprite.bounds.center;
     }
 }

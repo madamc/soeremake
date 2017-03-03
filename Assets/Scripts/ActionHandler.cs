@@ -11,6 +11,7 @@ public class ActionHandler : Selectable
 {
     public Selectable selectObject;
     public SpriteRenderer spriteRenderer;
+    public Image spriteImage;
     public RuckSack ruckSack;
     Camera cam;
     public GameObject cursorobj;
@@ -33,6 +34,9 @@ public class ActionHandler : Selectable
         {
         }
         spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer == null) {
+            spriteImage = GetComponent<Image>();
+                }
         ruckSack = GameObject.Find("RuckSack").GetComponent<RuckSack>();
         if (ruckSack != null)
         {
@@ -43,18 +47,27 @@ public class ActionHandler : Selectable
 
     private void Update()
     {
-        if (isMousedOver)
+        if (isMousedOver && spriteRenderer != null)
         {
-            spriteRenderer.material = (Material) AssetDatabase.LoadAssetAtPath("Assets/Materials/HighlightMat.mat", typeof(Material));
-        } else if (!isMousedOver)
+            spriteRenderer.material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Materials/HighlightMat.mat", typeof(Material));
+        }
+        else if (isMousedOver && spriteRenderer == null)
+        {
+            spriteImage.material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Materials/HighlightMat.mat", typeof(Material));
+        }
+        else if (!isMousedOver && spriteRenderer != null)
         {
             spriteRenderer.material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Materials/PlainMat.mat", typeof(Material));
         }
+        else if (!isMousedOver && spriteRenderer == null)
+        {
+            spriteImage.material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Materials/PlainMat.mat", typeof(Material));
+        }
 
-        
 
-        //todo Figure out how to prevent this from firing several times each time you click it.
-        if (Input.GetMouseButtonDown(1)) {
+
+            //todo Figure out how to prevent this from firing several times each time you click it.
+            if (Input.GetMouseButtonDown(1)) {
             Debug.Log("Clearing item selected By Cursor");
             ruckSack.cursorSocket.Clear();
             ruckSack.selectedItemKey = "nothing";
@@ -65,22 +78,24 @@ public class ActionHandler : Selectable
         }
 
 
+
+
         
-
-
-
 
 
         //This checks to see what is overlapping with the cursor
         Vector2 mousev = cam.ScreenToWorldPoint(cursorobj.transform.position);
         Collider2D[] col = Physics2D.OverlapPointAll(mousev);
+        
 
         if (col.Length > 0 && sceneItem != null)
         {
+            
             foreach (Collider2D c in col)
             {
                 if (sceneItem.name == c.gameObject.name)
                 {
+                    Debug.Log(c.gameObject.name);
                     isMousedOver = true;
 
 
