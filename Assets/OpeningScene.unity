@@ -251,7 +251,7 @@ Transform:
   m_GameObject: {fileID: 303457539}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 59.2, y: -9.19, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 6
@@ -331,7 +331,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 303457539}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 887a2a100db59a847b7f4d04d37aa0a1, type: 3}
   m_Name: 
@@ -523,7 +523,6 @@ GameObject:
   m_Component:
   - component: {fileID: 404586982}
   - component: {fileID: 404586983}
-  - component: {fileID: 404586984}
   m_Layer: 0
   m_Name: SceneItem
   m_TagString: Untagged
@@ -580,19 +579,6 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 0}
---- !u!114 &404586984
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 404586981}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 887a2a100db59a847b7f4d04d37aa0a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textureHeight: 0
-  textureWidth: 0
 --- !u!1 &539760529
 GameObject:
   m_ObjectHideFlags: 0
@@ -606,6 +592,7 @@ GameObject:
   - component: {fileID: 539760531}
   - component: {fileID: 539760530}
   - component: {fileID: 539760535}
+  - component: {fileID: 539760536}
   m_Layer: 0
   m_Name: table
   m_TagString: SelectableObject
@@ -724,8 +711,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 539760529}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -38.3, y: -26, z: 0}
-  m_LocalScale: {x: 10, y: 10, z: 1}
+  m_LocalPosition: {x: -74.1, y: -47.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 13
@@ -737,6 +724,19 @@ MonoBehaviour:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 539760529}
   m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 887a2a100db59a847b7f4d04d37aa0a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textureHeight: 0
+  textureWidth: 0
+--- !u!114 &539760536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 539760529}
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 887a2a100db59a847b7f4d04d37aa0a1, type: 3}
   m_Name: 
@@ -857,7 +857,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 678690521}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.178014, y: -5.917772, z: 0}
+  m_LocalPosition: {x: 109.7, y: -5.917772, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1146,6 +1146,7 @@ GameObject:
   - component: {fileID: 1291096506}
   - component: {fileID: 1291096507}
   - component: {fileID: 1291096508}
+  - component: {fileID: 1291096509}
   m_Layer: 0
   m_Name: crate
   m_TagString: SelectableObject
@@ -1270,6 +1271,19 @@ MonoBehaviour:
   isPortal: 0
   Description: 
   keyValue: 
+--- !u!114 &1291096509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1291096503}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 887a2a100db59a847b7f4d04d37aa0a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textureHeight: 0
+  textureWidth: 0
 --- !u!1 &1335769331
 GameObject:
   m_ObjectHideFlags: 0
@@ -1282,6 +1296,7 @@ GameObject:
   - component: {fileID: 1335769334}
   - component: {fileID: 1335769335}
   - component: {fileID: 1335769336}
+  - component: {fileID: 1335769337}
   m_Layer: 0
   m_Name: chair
   m_TagString: SelectableObject
@@ -1406,6 +1421,19 @@ MonoBehaviour:
   isPortal: 0
   Description: 
   keyValue: 
+--- !u!114 &1335769337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1335769331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 887a2a100db59a847b7f4d04d37aa0a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textureHeight: 0
+  textureWidth: 0
 --- !u!1 &1396962144
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,7 +13,7 @@ public class ScaleBackground : MonoBehaviour {
         //This sets the scale of the background transform to coorespond to the screen
         transform.localScale = new Vector3(newWidth*textureWidth,newHeight*textureHeight,1);
 
-        GetComponent<Renderer>().material.mainTextureScale = new Vector3(newWidth, newHeight, 1);
+    //    GetComponent<Renderer>().material.mainTextureScale = new Vector3(newWidth, newHeight, 1);
     }
 
 }
