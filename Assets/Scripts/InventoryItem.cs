@@ -4,8 +4,24 @@ using UnityEngine;
 
 public class InventoryItem : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
+    public string name;
+    public string description;
+    public string keyValue;
+    public Sprite sprite;
+    public int id;
+
+   public InventoryItem(string name, string description, string keyValue)
+    {
+        this.name = name;
+        this.description = description;
+        this.keyValue = description;
+
+    }
+
+  
+
+    // Use this for initialization
+    void Start () {
 		
 	}
 	

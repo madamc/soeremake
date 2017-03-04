@@ -13,7 +13,7 @@ public class SceneItem : MonoBehaviour {
 
     public Dictionary<String, SceneItem> itemSocket;  //dictionary<dictionary> itemSocket
     public String keyValue;
-
+    internal bool isInventory;
 
     public void GiveKeyValue(String givenKeyValue)
     {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ScaleBackground : MonoBehaviour {
     public int textureHeight = 240;
-    public int textureWidth = 320;
+    public int textureWidth = 427;
     // Use this for initialization
     void Start () {
         var newWidth = Mathf.Ceil(Screen.width / (textureWidth * PixelPerfectCamera.scale));

@@ -90,9 +90,8 @@ public class ActionHandler : Selectable
             
             foreach (Collider2D c in col)
             {
-                if (sceneItem.name == c.gameObject.name)
+                if (sceneItem.gameObject.GetInstanceID()== c.gameObject.GetInstanceID())
                 {
-                    Debug.Log(c.gameObject.name);
                     isMousedOver = true;
 
 

@@ -22,7 +22,9 @@ public class RuckSack : MonoBehaviour {
     private Canvas mouseCanvas;
     private Image mouseImage;
     private float screenymax;
+    public InventoryDB inventorydb;
     private float screenxmax;
+    public GameObject inventoryPockets;
     public Camera sceneCamera;
     private int selectedObj=0;
     public List<GameObject> listOfSelectableGameObjects;
@@ -39,11 +41,17 @@ public class RuckSack : MonoBehaviour {
         screenxmax = Screen.width * 0.99f;
         //hide the inventory
         inventorycanvas = GameObject.Find("InventoryCanvas");
-        RectTransform invRectTransform=inventorycanvas.GetComponent<RectTransform>();
-        invRectTransform.localScale = new Vector2(2, 2);
+        inventorydb = ScriptableObject.CreateInstance<InventoryDB>();
+        inventorydb.PopulateDB();
+        inventoryPockets = GameObject.Find("InventoryPockets");
+
+        inventorydb.initialize();
+        //RectTransform invRectTransform=inventorycanvas.GetComponent<RectTransform>();
+        //invRectTransform.localScale = new Vector2(2, 2);
+  
      //   invRectTransform.sizeDelta = new Vector2(Screen.width, Screen.height);
-        
-     //   invRectTransform.position = new Vector2(0 - (Screen.width/2), -1 * Screen.height / 2);
+
+        //   invRectTransform.position = new Vector2(0 - (Screen.width/2), -1 * Screen.height / 2);
         inventorycanvas.SetActive(false);
 
         listOfSelectableGameObjects = new List<GameObject>();
@@ -52,8 +60,6 @@ public class RuckSack : MonoBehaviour {
         mouseCanvas = cursorCanvas.GetComponent<Canvas>();
         mouseImage = mouseCanvas.GetComponentInChildren<Image>();
         
-       
-
       
         mouseTransform = mouseImage.GetComponent<RectTransform>();
         Cursor.visible = false;
@@ -134,10 +140,51 @@ public class RuckSack : MonoBehaviour {
         if (inventory) {
             if (inventorycanvas.activeSelf)
             {
+                for (int i=0;i < inventoryPockets.transform.childCount;i++) {
+                    Transform go = (inventoryPockets.transform.GetChild(i));
+
+                    Destroy(go.gameObject);
+
+                }
+                inventoryPockets.transform.DetachChildren();
                 inventorycanvas.SetActive(false);
+               
             }
-            else { 
-                inventorycanvas.SetActive(true);
+            else {
+
+                //Not sure where to populate this
+                if (inventorydb.itemsInInventory.Count == 0)
+                {
+                    inventorycanvas.SetActive(true);
+                }
+
+                foreach (InventoryItem it in inventorydb.itemsInInventory)
+                {
+                    GameObject go = new GameObject();
+                    go.AddComponent<ActionHandler>();
+                    go.GetComponent<ActionHandler>().ruckSack = this;
+                    go.GetComponent<ActionHandler>().cursorobj = mouseCursor;
+                    go.AddComponent<BoxCollider2D>();
+                    go.GetComponent<BoxCollider2D>().size = new Vector2(20,20);
+                    go.AddComponent<Image>();
+                    go.GetComponent<Image>().sprite = it.sprite;
+                    go.GetComponent<Image>().preserveAspect = true;
+                    go.GetComponent<ActionHandler>().spriteImage = go.GetComponent<Image>();
+                    go.GetComponent<ActionHandler>().spriteImage.sprite = it.sprite;
+                    go.name = it.name;
+                    //Add ToolTip with description
+                    go.AddComponent<SceneItem>();
+                    go.GetComponent<SceneItem>().name=it.name;
+                    go.GetComponent<SceneItem>().keyValue = keyValue;
+                    go.GetComponent<SceneItem>().isInventory = true;
+                    go.transform.SetParent(inventoryPockets.transform);
+                   
+                    //todo Why is this magic number needed???
+                    go.GetComponent<RectTransform>().anchoredPosition3D= new Vector3(0,0,-45);
+
+                    go.transform.localScale = Vector3.one;  
+                    inventorycanvas.SetActive(true);
+                }
             }
         }
 
@@ -189,11 +236,8 @@ public class RuckSack : MonoBehaviour {
             {
                 if (this._inputDelayOn)
                 {
-                    Debug.Log("how come this isn't sotpping this train?");
                     return;
                 }
-                Debug.Log(_inputDelayOn);
-                Debug.Log("howManyRight");
                 if (selectedObj == listOfSelectableGameObjects.Count - 1)
                 {
                     Vector2 newvec = sceneCamera.WorldToScreenPoint(new Vector2(
@@ -248,18 +292,51 @@ public class RuckSack : MonoBehaviour {
     {
         // Check the value of the item to see if it's the right \\corresponding value     
         cursorSocket.Add(item.keyValue, item);
-        selectedItemKey = item.keyValue;
-        Sprite tempsprite;
-        if (item.GetComponent<SpriteRenderer>() != null) { 
-        tempsprite= (item.GetComponent<SpriteRenderer>()).sprite;
-        }
-        else
+        
+        
+        //don't delete
+        //this is the code that makes the item selected, and changes the sprite of the cursor to match.    
+        //selectedItemKey = item.keyValue;
+
+        //Sprite tempsprite;
+        //if (item.GetComponent<SpriteRenderer>() != null) { 
+        //tempsprite= (item.GetComponent<SpriteRenderer>()).sprite;
+        //}
+        //else
+        //{
+        //    tempsprite = (item.GetComponent<Image>().sprite);
+        //}
+        //mouseImage.sprite = tempsprite;
+
+        Debug.Log("Adding to Inventory");
+
+        if (inventorydb.itemsInInventory.Count == 0)
         {
-            tempsprite = (item.GetComponent<Image>().sprite);
+            inventorydb.itemsInInventory.Add(inventorydb.inventoryItemDictionary[item.keyValue]);
         }
-        mouseImage.sprite = tempsprite;
- 
+        else {
+            bool notfound = true; 
+            foreach (InventoryItem it in inventorydb.itemsInInventory)
+            {
+
+                if ((it.keyValue == item.keyValue))
+                {
+                    notfound = false;
+                    Debug.Log("already added to inventory");
+                    break;
+                   
+                }
+            }
+            if (notfound)
+            {
+                inventorydb.itemsInInventory.Add(inventorydb.inventoryItemDictionary[item.keyValue]);
+            }
+        }//else
+       
+
     }
+
+     
 
 
     //This method handles the compare operation when you use an object on another.  
