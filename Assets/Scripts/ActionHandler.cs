@@ -69,12 +69,8 @@ public class ActionHandler : Selectable
             //todo Figure out how to prevent this from firing several times each time you click it.
             if (Input.GetMouseButtonDown(1)) {
             Debug.Log("Clearing item selected By Cursor");
-            ruckSack.cursorSocket.Clear();
-            ruckSack.selectedItemKey = "nothing";
-            cursorobj.GetComponent<Image>().sprite = 
-                Sprite.Create(ruckSack.NormalCursor, 
-                new Rect(0, 0, ruckSack.NormalCursor.width,
-                ruckSack.NormalCursor.height), new Vector2(0.5f, 0.5f));
+            ruckSack.ClearCursor();
+          
         }
 
         Vector2 mousev = cam.ScreenToWorldPoint(cursorobj.transform.position);
@@ -100,15 +96,21 @@ public class ActionHandler : Selectable
                         try
                         {
                             bool itemSelected = false;
+                            if (ruckSack.selectedItemKey != "nothing") 
+                            {
+                                itemSelected = true;
+                            }
                             bool selectingItem = false;
                             bool isPortal;
+                            bool isInventory;
 
 
+                            isInventory = sceneItem.isInventory;
                             isPortal = sceneItem.isPortal;
                             //handle the action if it is NOT a portal.
-                            if (!isPortal)
+                            if (!isPortal && (isInventory || itemSelected))
                             {
-                                print("Hey Yo I selected a component!");
+                                Debug.Log("Sceneitem selected");
                                 if (ruckSack.cursorSocket.Count > 0)
                                 {
                                     itemSelected = true;
@@ -123,7 +125,12 @@ public class ActionHandler : Selectable
                                 //print("My name is " + ruckSack.keyValue);
                                 if (!ruckSack.isAlreadySelected(sceneItem) && !itemSelected)
                                 {
+                                    
                                     ruckSack.addTwinItem(sceneItem);
+                                    Destroy(sceneItem.gameObject);
+
+                                    //Todo, allow for craft, etc.
+                                    ruckSack.inventorycanvas.SetActive(false);
                                     selectingItem = true;
                                 }
                                 if (!selectingItem && itemSelected)
@@ -132,7 +139,22 @@ public class ActionHandler : Selectable
                                 }
                                 //ruckSack.keyValue = sceneItem.keyValue;
                             }//end if portal
-                            else
+                            else if (!isPortal && !isInventory&&!itemSelected)
+                            {
+                                //todo Need to add context menu here
+                                if (sceneItem.isPickupable)
+                                {
+                               
+                                    ruckSack.addToInventory(sceneItem);
+                                    //Implement Wait Till animation completed
+                                    Destroy(sceneItem.gameObject);
+                                    
+                                }
+                                else
+                                {
+                                    ruckSack.generateCannotPickupMessage(sceneItem.keyValue);
+                                }
+                            } else if (isPortal)
                             {
                                 //If you're a portal, do this.  
                                 Zoomer zoom = (Zoomer)(cam.GetComponent<Zoomer>());
@@ -164,6 +186,7 @@ public class ActionHandler : Selectable
 
     }//end update 
 
+ 
 
 }
 

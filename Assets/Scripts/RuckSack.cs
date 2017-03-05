@@ -31,7 +31,7 @@ public class RuckSack : MonoBehaviour {
     private bool _inputDelayOn = false;
     private float _inputDelayTimer=0.0f;
     public float inputDelayTime = 0.5f;
-    GameObject inventorycanvas;
+    public GameObject inventorycanvas;
     void Start()
     {
 
@@ -140,6 +140,7 @@ public class RuckSack : MonoBehaviour {
         if (inventory) {
             if (inventorycanvas.activeSelf)
             {
+                
                 for (int i=0;i < inventoryPockets.transform.childCount;i++) {
                     Transform go = (inventoryPockets.transform.GetChild(i));
 
@@ -151,7 +152,7 @@ public class RuckSack : MonoBehaviour {
                
             }
             else {
-
+                ClearCursor();
                 //Not sure where to populate this
                 if (inventorydb.itemsInInventory.Count == 0)
                 {
@@ -160,23 +161,7 @@ public class RuckSack : MonoBehaviour {
 
                 foreach (InventoryItem it in inventorydb.itemsInInventory)
                 {
-                    GameObject go = new GameObject();
-                    go.AddComponent<ActionHandler>();
-                    go.GetComponent<ActionHandler>().ruckSack = this;
-                    go.GetComponent<ActionHandler>().cursorobj = mouseCursor;
-                    go.AddComponent<BoxCollider2D>();
-                    go.GetComponent<BoxCollider2D>().size = new Vector2(20,20);
-                    go.AddComponent<Image>();
-                    go.GetComponent<Image>().sprite = it.sprite;
-                    go.GetComponent<Image>().preserveAspect = true;
-                    go.GetComponent<ActionHandler>().spriteImage = go.GetComponent<Image>();
-                    go.GetComponent<ActionHandler>().spriteImage.sprite = it.sprite;
-                    go.name = it.name;
-                    //Add ToolTip with description
-                    go.AddComponent<SceneItem>();
-                    go.GetComponent<SceneItem>().name=it.name;
-                    go.GetComponent<SceneItem>().keyValue = keyValue;
-                    go.GetComponent<SceneItem>().isInventory = true;
+                    GameObject go = createGoInventoryItem(it);
                     go.transform.SetParent(inventoryPockets.transform);
                    
                     //todo Why is this magic number needed???
@@ -275,6 +260,50 @@ public class RuckSack : MonoBehaviour {
 
 
     }
+
+    public void generateCannotPickupMessage(string keyValue)
+    {
+        switch (keyValue)
+        {
+            case "IMATABLE":
+                Debug.Log("Thine armor is not spacious enough, m'lord.");
+                break;
+            default:
+                Debug.Log("Ye cannot pick that up.");
+                break;
+        }
+    }
+
+    internal void addToInventory(SceneItem sceneItem)
+    {
+
+        Debug.Log("Adding to Inventory");
+
+        if (inventorydb.itemsInInventory.Count == 0)
+        {
+            inventorydb.itemsInInventory.Add(inventorydb.inventoryItemDictionary[sceneItem.keyValue]);
+        }
+        else
+        {
+            bool notfound = true;
+            foreach (InventoryItem it in inventorydb.itemsInInventory)
+            {
+
+                if ((it.keyValue == sceneItem.keyValue))
+                {
+                    notfound = false;
+                    Debug.Log("already added to inventory");
+                    break;
+
+                }
+            }
+            if (notfound)
+            {
+                inventorydb.itemsInInventory.Add(inventorydb.inventoryItemDictionary[sceneItem.keyValue]);
+            }
+        }//else
+    }
+
     private int SortByPositionX(GameObject g1, GameObject g2)
     {
         return g1.transform.position.x.CompareTo(g2.transform.position.x);
@@ -292,46 +321,23 @@ public class RuckSack : MonoBehaviour {
     {
         // Check the value of the item to see if it's the right \\corresponding value     
         cursorSocket.Add(item.keyValue, item);
-        
-        
+
+
         //don't delete
         //this is the code that makes the item selected, and changes the sprite of the cursor to match.    
-        //selectedItemKey = item.keyValue;
+        selectedItemKey = item.keyValue;
 
-        //Sprite tempsprite;
-        //if (item.GetComponent<SpriteRenderer>() != null) { 
-        //tempsprite= (item.GetComponent<SpriteRenderer>()).sprite;
-        //}
-        //else
-        //{
-        //    tempsprite = (item.GetComponent<Image>().sprite);
-        //}
-        //mouseImage.sprite = tempsprite;
-
-        Debug.Log("Adding to Inventory");
-
-        if (inventorydb.itemsInInventory.Count == 0)
+        Sprite tempsprite;
+        if (item.GetComponent<SpriteRenderer>() != null)
         {
-            inventorydb.itemsInInventory.Add(inventorydb.inventoryItemDictionary[item.keyValue]);
+            tempsprite = (item.GetComponent<SpriteRenderer>()).sprite;
         }
-        else {
-            bool notfound = true; 
-            foreach (InventoryItem it in inventorydb.itemsInInventory)
-            {
+        else
+        {
+            tempsprite = (item.GetComponent<Image>().sprite);
+        }
+        mouseImage.sprite = tempsprite;
 
-                if ((it.keyValue == item.keyValue))
-                {
-                    notfound = false;
-                    Debug.Log("already added to inventory");
-                    break;
-                   
-                }
-            }
-            if (notfound)
-            {
-                inventorydb.itemsInInventory.Add(inventorydb.inventoryItemDictionary[item.keyValue]);
-            }
-        }//else
        
 
     }
@@ -368,6 +374,20 @@ public class RuckSack : MonoBehaviour {
                     break;
                 default:
                     Debug.Log("That's not the intended use for a chair");
+                    break;
+            }
+        }
+
+        else if (selectedItemKey == "IMACANDLE")
+        {
+            switch (item.keyValue)
+            {
+                case "IMATABLE":
+                    Debug.Log("You drop the candle, and it snuffs out. Nice going, m'lord! ");
+                    removeInventoryItemWithKeyvalue(keyValue);
+                    break;
+                default:
+                    Debug.Log("Tsk tsk... What would your mother say...");
                     break;
             }
         }
@@ -419,4 +439,54 @@ public class RuckSack : MonoBehaviour {
             return sprite.texture;
     }
 
+
+    public GameObject createGoInventoryItem(InventoryItem it)
+    {
+        GameObject go = new GameObject();
+        go.AddComponent<ActionHandler>();
+        go.GetComponent<ActionHandler>().ruckSack = this;
+        go.GetComponent<ActionHandler>().cursorobj = mouseCursor;
+        go.AddComponent<BoxCollider2D>();
+        go.GetComponent<BoxCollider2D>().size = new Vector2(20, 20);
+        go.AddComponent<Image>();
+        go.GetComponent<Image>().sprite = it.sprite;
+        go.GetComponent<Image>().preserveAspect = true;
+        go.GetComponent<ActionHandler>().spriteImage = go.GetComponent<Image>();
+        go.GetComponent<ActionHandler>().spriteImage.sprite = it.sprite;
+        go.name = it.name;
+        
+        //Add ToolTip with description
+        go.AddComponent<SceneItem>();
+        go.GetComponent<SceneItem>().name = it.name;
+        go.GetComponent<SceneItem>().keyValue = it.keyValue;
+        go.GetComponent<SceneItem>().isInventory = true;
+        return go;
+    }
+    public void ClearCursor()
+    {
+        cursorSocket.Clear();
+        selectedItemKey = "nothing";
+        mouseCursor.GetComponent<Image>().sprite =
+            Sprite.Create(NormalCursor,
+            new Rect(0, 0, NormalCursor.width,
+            NormalCursor.height), new Vector2(0.5f, 0.5f));
+    }
+
+    public void removeInventoryItemWithKeyvalue(string keyValue)
+    {
+        int elementToDestroy=0;
+        for (int i=0;i < inventorydb.itemsInInventory.Count;i++)
+        {
+            if (selectedItemKey == keyValue)
+            {
+                elementToDestroy = i;
+            }
+        }
+        //todo:  kind of worried about this implementation
+       
+            inventorydb.itemsInInventory.RemoveAt(elementToDestroy);
+
+        ClearCursor();
+        
+    }
 }
