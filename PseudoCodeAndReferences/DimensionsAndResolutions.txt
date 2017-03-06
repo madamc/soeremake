@@ -1,0 +1,8 @@
+We primarily want the game to be in a 16:9 ratio, but it can support a 4:3 ratio if desired, it will simply resize and zoom in the camera, but the base game will be based on 16:9
+
+Resolution for a single scene will be 427X240
+
+Minimum object height is 8 pixels
+
+character height will generally be 75 pixels
+character width will generally be 25 pixels + 5 or so pixels for foot
