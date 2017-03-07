@@ -490,6 +490,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 539760533}
   spriteImage: {fileID: 0}
   ruckSack: {fileID: 1038225168}
+  spotlight: {fileID: 711827377}
   cursorobj: {fileID: 832647309}
 --- !u!212 &539760533
 SpriteRenderer:
@@ -504,7 +505,7 @@ SpriteRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7683f4ec80d149e44b4f265d10db0e29, type: 2}
+  - {fileID: 2100000, guid: 0be1de7c9f864e04d834262bf945897a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -582,7 +583,7 @@ GameObject:
   - component: {fileID: 711827379}
   - component: {fileID: 711827378}
   m_Layer: 0
-  m_Name: Directional light
+  m_Name: Spotlight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -596,11 +597,11 @@ Light:
   m_GameObject: {fileID: 711827377}
   m_Enabled: 1
   serializedVersion: 7
-  m_Type: 1
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
-  m_Range: 10
-  m_SpotAngle: 30
+  m_Type: 0
+  m_Color: {r: 0.18804066, g: 0.23469898, b: 0.5441177, a: 1}
+  m_Intensity: 6.46
+  m_Range: 100
+  m_SpotAngle: 134
   m_CookieSize: 10
   m_Shadows:
     m_Type: 0
@@ -619,7 +620,7 @@ Light:
     m_Bits: 4294967295
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
+  m_BounceIntensity: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
 --- !u!4 &711827379
@@ -628,13 +629,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 711827377}
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 0, y: 0, z: 2}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 20, y: 9, z: -56}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 14
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_RootOrder: 15
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &832647309
 GameObject:
   m_ObjectHideFlags: 0
@@ -762,7 +763,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 100
   field of view: 60
   orthographic: 1
   orthographic size: 120
@@ -896,6 +897,7 @@ MonoBehaviour:
   listOfSelectableGameObjects: []
   inputDelayTime: 0.3
   inventorycanvas: {fileID: 0}
+  spotlight: {fileID: 0}
 --- !u!4 &1038225169
 Transform:
   m_ObjectHideFlags: 0
@@ -1059,7 +1061,7 @@ RectTransform:
   m_Children:
   - {fileID: 1735047732}
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1256,6 +1258,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 1428074848}
   spriteImage: {fileID: 0}
   ruckSack: {fileID: 1038225168}
+  spotlight: {fileID: 711827377}
   cursorobj: {fileID: 832647309}
 --- !u!212 &1428074848
 SpriteRenderer:
@@ -1270,7 +1273,7 @@ SpriteRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7683f4ec80d149e44b4f265d10db0e29, type: 2}
+  - {fileID: 2100000, guid: 0be1de7c9f864e04d834262bf945897a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1305,6 +1308,69 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1439583942
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1439583944}
+  - component: {fileID: 1439583943}
+  m_Layer: 0
+  m_Name: Directional Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!108 &1439583943
+Light:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1439583942}
+  m_Enabled: 1
+  serializedVersion: 7
+  m_Type: 1
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 0.55
+  m_Range: 10
+  m_SpotAngle: 30
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 1
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.14
+    m_NormalBias: 1.09
+    m_NearPlane: 6.7
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_Lightmapping: 4
+  m_AreaSize: {x: 900, y: 900}
+  m_BounceIntensity: 1
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
+--- !u!4 &1439583944
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1439583942}
+  m_LocalRotation: {x: 0.05516273, y: 0.11829687, z: 0.41900265, w: 0.8985542}
+  m_LocalPosition: {x: -100, y: 0, z: -5}
+  m_LocalScale: {x: 50, y: 50, z: 0}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 16
+  m_LocalEulerAnglesHint: {x: 0, y: 15, z: 50}
 --- !u!1 &1528868450
 GameObject:
   m_ObjectHideFlags: 0
@@ -1564,6 +1630,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 1693297250}
   spriteImage: {fileID: 0}
   ruckSack: {fileID: 1038225168}
+  spotlight: {fileID: 711827377}
   cursorobj: {fileID: 832647309}
 --- !u!212 &1693297250
 SpriteRenderer:
@@ -1578,7 +1645,7 @@ SpriteRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7683f4ec80d149e44b4f265d10db0e29, type: 2}
+  - {fileID: 2100000, guid: 0be1de7c9f864e04d834262bf945897a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1817,6 +1884,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 1844380154}
   spriteImage: {fileID: 0}
   ruckSack: {fileID: 1038225168}
+  spotlight: {fileID: 711827377}
   cursorobj: {fileID: 832647309}
 --- !u!212 &1844380154
 SpriteRenderer:
@@ -1831,7 +1899,7 @@ SpriteRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7683f4ec80d149e44b4f265d10db0e29, type: 2}
+  - {fileID: 2100000, guid: 0be1de7c9f864e04d834262bf945897a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

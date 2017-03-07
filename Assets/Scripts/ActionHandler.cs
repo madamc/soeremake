@@ -13,6 +13,7 @@ public class ActionHandler : Selectable
     public SpriteRenderer spriteRenderer;
     public Image spriteImage;
     public RuckSack ruckSack;
+    public GameObject spotlight;
 
     Camera cam;
     public GameObject cursorobj;
@@ -26,7 +27,7 @@ public class ActionHandler : Selectable
         sceneItem = GetComponent<SceneItem>();
         cursorobj = GameObject.Find("Cursor");
         cam = GameObject.Find("Main Camera").GetComponent<Camera>();
-
+        spotlight = GameObject.Find("Spotlight");
     }
 
     protected override void Awake()
@@ -46,146 +47,151 @@ public class ActionHandler : Selectable
 
 
 
-    private void Update()
-    {
-        if (isMousedOver && spriteRenderer != null)
-        {
-            spriteRenderer.material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Materials/HighlightMat.mat", typeof(Material));
-        }
-        else if (isMousedOver && spriteRenderer == null)
-        {
-            spriteImage.material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Materials/HighlightMat.mat", typeof(Material));
-        }
-        else if (!isMousedOver && spriteRenderer != null)
-        {
-            spriteRenderer.material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Materials/PlainMat.mat", typeof(Material));
-        }
-        else if (!isMousedOver && spriteRenderer == null)
-        {
-            spriteImage.material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Materials/PlainMat.mat", typeof(Material));
-        }
+    //private void Update()
+    //{
+    //    if (isMousedOver && spriteRenderer != null)
+    //    {
+    //        Debug.Log("Lights!");
+    //        spotlight.GetComponent<Light>().enabled = true;
+    //        spotlight.transform.position = new Vector3(spriteRenderer.gameObject.transform.position.x, spriteRenderer.gameObject.transform.position.y, spotlight.transform.position.z);
+    //        spriteRenderer.material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Materials/HighlightMat.mat", typeof(Material));
+    //    }
+    //    else if (isMousedOver && spriteRenderer == null)
+    //    {
+    //        spriteImage.material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Materials/HighlightMat.mat", typeof(Material));
+    //    }
+    //    else if (!isMousedOver && spriteRenderer != null)
+    //    {
+    //        spotlight.GetComponent<Light>().enabled = false;
+    //        spriteRenderer.material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Materials/LightSpriteMat.mat", typeof(Material));
+    //    }
+    //    else if (!isMousedOver && spriteRenderer == null)
+    //    {
+    //        spotlight.GetComponent<Light>().enabled = false;
+    //        spriteImage.material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Materials/PlainMat.mat", typeof(Material));
+    //    }
 
 
 
-            //todo Figure out how to prevent this from firing several times each time you click it.
-            if (Input.GetMouseButtonDown(1)) {
-            Debug.Log("Clearing item selected By Cursor");
-            ruckSack.ClearCursor();
+    //        //todo Figure out how to prevent this from firing several times each time you click it.
+    //        if (Input.GetMouseButtonDown(1)) {
+    //        Debug.Log("Clearing item selected By Cursor");
+    //        ruckSack.ClearCursor();
           
-        }
+    //    }
 
-        Vector2 mousev = cam.ScreenToWorldPoint(cursorobj.transform.position);
+    //    Vector2 mousev = cam.ScreenToWorldPoint(cursorobj.transform.position);
           
-        //This checks to see what is overlapping with the cursor
+    //    //This checks to see what is overlapping with the cursor
 
-        Collider2D[] col = Physics2D.OverlapPointAll(mousev);
+    //    Collider2D[] col = Physics2D.OverlapPointAll(mousev);
         
    
 
-        if (col.Length > 0 && sceneItem != null)
-        {
+    //    if (col.Length > 0 && sceneItem != null)
+    //    {
             
-            foreach (Collider2D c in col)
-            {
-                if (sceneItem.gameObject.GetInstanceID()== c.gameObject.GetInstanceID())
-                {
-                    isMousedOver = true;
+    //        foreach (Collider2D c in col)
+    //        {
+    //            if (sceneItem.gameObject.GetInstanceID()== c.gameObject.GetInstanceID())
+    //            {
+    //                isMousedOver = true;
 
 
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        try
-                        {
-                            bool itemSelected = false;
-                            if (ruckSack.selectedItemKey != "nothing") 
-                            {
-                                itemSelected = true;
-                            }
-                            bool selectingItem = false;
-                            bool isPortal;
-                            bool isInventory;
+    //                if (Input.GetMouseButtonDown(0))
+    //                {
+    //                    try
+    //                    {
+    //                        bool itemSelected = false;
+    //                        if (ruckSack.selectedItemKey != "nothing") 
+    //                        {
+    //                            itemSelected = true;
+    //                        }
+    //                        bool selectingItem = false;
+    //                        bool isPortal;
+    //                        bool isInventory;
 
 
-                            isInventory = sceneItem.isInventory;
-                            isPortal = sceneItem.isPortal;
-                            //handle the action if it is NOT a portal.
-                            if (!isPortal && (isInventory || itemSelected))
-                            {
-                                Debug.Log("Sceneitem selected");
-                                if (ruckSack.cursorSocket.Count > 0)
-                                {
-                                    itemSelected = true;
-                                    var selectable = c.GetComponent<Selectable>();
-                                    if (selectable == null) return;
-                                    selectable.Select();
-                                }
+    //                        isInventory = sceneItem.isInventory;
+    //                        isPortal = sceneItem.isPortal;
+    //                        //handle the action if it is NOT a portal.
+    //                        if (!isPortal && (isInventory || itemSelected))
+    //                        {
+    //                            Debug.Log("Sceneitem selected");
+    //                            if (ruckSack.cursorSocket.Count > 0)
+    //                            {
+    //                                itemSelected = true;
+    //                                var selectable = c.GetComponent<Selectable>();
+    //                                if (selectable == null) return;
+    //                                selectable.Select();
+    //                            }
 
-                                //sceneItem.keyValue = "juice";
+    //                            //sceneItem.keyValue = "juice";
 
-                                //Not sure if we want to worry about the rucksack's key value anymore.  
-                                //print("My name is " + ruckSack.keyValue);
-                                if (!ruckSack.isAlreadySelected(sceneItem) && !itemSelected)
-                                {
+    //                            //Not sure if we want to worry about the rucksack's key value anymore.  
+    //                            //print("My name is " + ruckSack.keyValue);
+    //                            if (!ruckSack.isAlreadySelected(sceneItem) && !itemSelected)
+    //                            {
                                     
-                                    ruckSack.addTwinItem(sceneItem);
-                                    Destroy(sceneItem.gameObject);
+    //                                ruckSack.addTwinItem(sceneItem);
+    //                                Destroy(sceneItem.gameObject);
 
-                                    //Todo, allow for craft, etc.
-                                    ruckSack.inventorycanvas.SetActive(false);
-                                    selectingItem = true;
-                                }
-                                if (!selectingItem && itemSelected)
-                                {
-                                    ruckSack.compareObjectAction(sceneItem);
-                                }
-                                //ruckSack.keyValue = sceneItem.keyValue;
-                            }//end if portal
-                            else if (!isPortal && !isInventory&&!itemSelected)
-                            {
-                                //todo Need to add context menu here
-                                if (sceneItem.isPickupable)
-                                {
+    //                                //Todo, allow for craft, etc.
+    //                                ruckSack.inventorycanvas.SetActive(false);
+    //                                selectingItem = true;
+    //                            }
+    //                            if (!selectingItem && itemSelected)
+    //                            {
+    //                                ruckSack.compareObjectAction(sceneItem);
+    //                            }
+    //                            //ruckSack.keyValue = sceneItem.keyValue;
+    //                        }//end if portal
+    //                        else if (!isPortal && !isInventory&&!itemSelected)
+    //                        {
+    //                            //todo Need to add context menu here
+    //                            if (sceneItem.isPickupable)
+    //                            {
                                
-                                    ruckSack.addToInventory(sceneItem);
-                                    //Implement Wait Till animation completed
-                                    Destroy(sceneItem.gameObject);
+    //                                ruckSack.addToInventory(sceneItem);
+    //                                //Implement Wait Till animation completed
+    //                                Destroy(sceneItem.gameObject);
                                     
-                                }
-                                else
-                                {
-                                    ruckSack.generateCannotPickupMessage(sceneItem.keyValue);
-                                }
-                            } else if (isPortal)
-                            {
-                                //If you're a portal, do this.  
-                                Zoomer zoom = (Zoomer)(cam.GetComponent<Zoomer>());
-                                zoom.ZoomToScene(sceneItem.keyValue, (sceneItem.transform));
-                            }
-                        }//end try
-                        catch (NullReferenceException n)
-                        {
-                            Debug.Log("ITEM NOT SET as a SCENEITEM");
-                        }
-                    }//end if
+    //                            }
+    //                            else
+    //                            {
+    //                                ruckSack.generateCannotPickupMessage(sceneItem.keyValue);
+    //                            }
+    //                        } else if (isPortal)
+    //                        {
+    //                            //If you're a portal, do this.  
+    //                            Zoomer zoom = (Zoomer)(cam.GetComponent<Zoomer>());
+    //                            zoom.ZoomToScene(sceneItem.keyValue, (sceneItem.transform));
+    //                        }
+    //                    }//end try
+    //                    catch (NullReferenceException n)
+    //                    {
+    //                        Debug.Log("ITEM NOT SET as a SCENEITEM");
+    //                    }
+    //                }//end if
 
 
-                }//end if
+    //            }//end if
 
 
 
-                else
-                {
-                    isMousedOver = false;
-                }
-            }
-        }
-        else
-        {
-            isMousedOver = false;
-        }
+    //            else
+    //            {
+    //                isMousedOver = false;
+    //            }
+    //        }
+    //    }
+    //    else
+    //    {
+    //        isMousedOver = false;
+    //    }
 
 
-    }//end update 
+    //}//end update 
 
  
 

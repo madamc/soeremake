@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,9 +33,10 @@ public class RuckSack : MonoBehaviour {
     private float _inputDelayTimer=0.0f;
     public float inputDelayTime = 0.5f;
     public GameObject inventorycanvas;
+    public GameObject spotlight;
     void Start()
     {
-
+        spotlight = GameObject.Find("Spotlight");
         sceneCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
         screenymax = Screen.height * 0.95f;
 
@@ -77,6 +79,8 @@ public class RuckSack : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        //todo .. prolly should move this to start and update it only when needed.
+        GameObject[] golist= GameObject.FindGameObjectsWithTag("SelectableObject");
         if (keyValue != null) { 
         }
         Vector3 delta;
@@ -191,7 +195,12 @@ public class RuckSack : MonoBehaviour {
             if (leftdirection )
             {
                 if (_inputDelayOn) return;
-                Debug.Log("howManyLeft");
+               
+                
+                    deselectAllItems(golist);
+
+                
+
                 if (selectedObj == 0)
                 {
                     selectedObj = listOfSelectableGameObjects.Count - 1;
@@ -223,6 +232,10 @@ public class RuckSack : MonoBehaviour {
                 {
                     return;
                 }
+
+                deselectAllItems(golist);
+
+
                 if (selectedObj == listOfSelectableGameObjects.Count - 1)
                 {
                     Vector2 newvec = sceneCamera.WorldToScreenPoint(new Vector2(
@@ -255,9 +268,178 @@ public class RuckSack : MonoBehaviour {
         {
             _inputDelayOn = false;
         }
+
+
+        Vector2 mousev = sceneCamera.ScreenToWorldPoint(mouseCursor.transform.position);
+
+        //This checks to see what is overlapping with the cursor
+        bool mousedOver = false;
+
+        Collider2D[] col = Physics2D.OverlapPointAll(mousev);
+
+
+
+        if (col.Length > 0)
+        {
+
+            foreach (Collider2D c in col)
+            {
+                if (c.gameObject.GetComponent<SceneItem>() != null)
+                {
+                    SceneItem sceneItem = c.gameObject.GetComponent<SceneItem>();
+                    mousedOver = true;
+
+
+
+
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        try
+                        {
+                            bool itemSelected = false;
+                            if (selectedItemKey != "nothing")
+                            {
+                                itemSelected = true;
+                            }
+                            bool selectingItem = false;
+                            bool isPortal;
+                            bool isInventory;
+
+
+                            isInventory = sceneItem.isInventory;
+                            isPortal = sceneItem.isPortal;
+                            //handle the action if it is NOT a portal.
+                            if (!isPortal && (isInventory || itemSelected))
+                            {
+                                Debug.Log("Sceneitem selected");
+                                if (cursorSocket.Count > 0)
+                                {
+                                    itemSelected = true;
+                                    var selectable = c.GetComponent<Selectable>();
+                                    if (selectable == null) return;
+                                    selectable.Select();
+                                }
+
+                                //sceneItem.keyValue = "juice";
+
+                                //Not sure if we want to worry about the rucksack's key value anymore.  
+                                //print("My name is " + ruckSack.keyValue);
+                                if (!isAlreadySelected(sceneItem) && !itemSelected)
+                                {
+
+                                    addTwinItem(sceneItem);
+                                    Destroy(sceneItem.gameObject);
+
+                                    //Todo, allow for craft, etc.
+                                    inventorycanvas.SetActive(false);
+                                    selectingItem = true;
+                                }
+                                if (!selectingItem && itemSelected)
+                                {
+                                    compareObjectAction(sceneItem);
+                                }
+                                //ruckSack.keyValue = sceneItem.keyValue;
+                            }//end if portal
+                            else if (!isPortal && !isInventory && !itemSelected)
+                            {
+                                //todo Need to add context menu here
+                                if (sceneItem.isPickupable)
+                                {
+
+                                    addToInventory(sceneItem);
+                                    listOfSelectableGameObjects.Clear();
+                                    populateListOfSelectableGameObjects(listOfSelectableGameObjects);
+                                    //Implement Wait Till animation completed
+                                    Destroy(sceneItem.gameObject);
+
+                                }
+                                else
+                                {
+                                    generateCannotPickupMessage(sceneItem.keyValue);
+                                }
+                            }
+                            else if (isPortal)
+                            {
+                                //If you're a portal, do this.  
+                                Zoomer zoom = (Zoomer)(sceneCamera.GetComponent<Zoomer>());
+                                zoom.ZoomToScene(sceneItem.keyValue, (sceneItem.transform));
+                            }
+                        }//end try
+                        catch (NullReferenceException n)
+                        {
+                            Debug.Log("ITEM NOT SET as a SCENEITEM");
+                        }
+                    }//end if
+
+
+                }//end if
+
+
+
+                if (c.gameObject.GetComponent<SpriteRenderer>() != null)
+                {
+
+                    SpriteRenderer spriteRenderer = c.gameObject.GetComponent<SpriteRenderer>();
+                    if (!spriteRenderer.material.name.Contains("HighlightMat"))
+                    {
+                        {
+
+                            spotlight.GetComponent<Light>().enabled = true;
+                            spotlight.transform.position = new Vector3(spriteRenderer.gameObject.transform.position.x, spriteRenderer.gameObject.transform.position.y, spotlight.transform.position.z);
+                            spriteRenderer.material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Materials/HighlightMat.mat", typeof(Material));
+                        }
+                    }
+                }
+                else if (c.gameObject.GetComponent<Image>() != null)
+                {
+
+                    Image spriteImage = c.gameObject.GetComponent<Image>();
+                    if (!spriteImage.material.name.Contains("HighlightMat"))
+                    {
+                        spriteImage.material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Materials/HighlightMat.mat", typeof(Material));
+                    }
+                }
+
+            }
+
+         
+            
+        }//end if col length
         
+        if (!mousedOver)
+        {
+            deselectAllItems(golist);
+            
+        }
 
 
+
+
+
+
+
+
+
+    }
+
+    private void deselectAllItems(GameObject[] golist)
+    {
+        foreach (GameObject go in golist)
+        {
+            if (go.GetComponent<SpriteRenderer>() != null)
+            {
+                SpriteRenderer spriteRenderer = go.GetComponent<SpriteRenderer>();
+                spotlight.GetComponent<Light>().enabled = false;
+                spriteRenderer.material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Materials/LightSpriteMat.mat", typeof(Material));
+            }
+            else if (go.GetComponent<SpriteRenderer>() == null)
+            {
+                Image spriteImage = go.GetComponent<Image>();
+                spotlight.GetComponent<Light>().enabled = false;
+                spriteImage.material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Materials/PlainMat.mat", typeof(Material));
+            }
+
+        }
 
     }
 
