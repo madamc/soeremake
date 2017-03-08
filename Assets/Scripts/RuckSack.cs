@@ -34,6 +34,7 @@ public class RuckSack : MonoBehaviour {
     public float inputDelayTime = 0.5f;
     public GameObject inventorycanvas;
     public GameObject spotlight;
+    public GameObject contextPanel;
     void Start()
     {
         spotlight = GameObject.Find("Spotlight");
@@ -93,6 +94,15 @@ public class RuckSack : MonoBehaviour {
         
         float currentx = mouseTransform.position.x;
         float currenty = mouseTransform.position.y;
+
+        //        //todo Figure out how to prevent this from firing several times each time you click it.
+        if (Input.GetMouseButtonDown(1))
+        {
+            Debug.Log("Clearing item selected By Cursor");
+            ClearCursor();
+            
+
+        }
 
         delta = new Vector3(h, v, 0);
         if (canCursorMove)
@@ -343,6 +353,8 @@ public class RuckSack : MonoBehaviour {
                             else if (!isPortal && !isInventory && !itemSelected)
                             {
                                 //todo Need to add context menu here
+                                contextCreator(sceneItem);
+
                                 if (sceneItem.isPickupable)
                                 {
 
@@ -412,13 +424,17 @@ public class RuckSack : MonoBehaviour {
             
         }
 
+    }
 
+    public void contextCreator(SceneItem si)
+    {
+        if (si.isPickupable)
+        {
+            contextPanel.AddComponent<Button>();
 
+            
 
-
-
-
-
+        }
 
     }
 
