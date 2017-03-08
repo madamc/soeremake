@@ -7,6 +7,7 @@ public class PixelPerfectCamera : MonoBehaviour {
     public static float pixelsToUnits = 1.0f;
     public static float scale = 1;
     public Vector2 nativeResolution = new Vector2(427, 240);
+    float screenheight = Screen.height;
    
 
     private void Awake()

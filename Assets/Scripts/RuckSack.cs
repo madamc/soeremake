@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,18 +23,37 @@ public class RuckSack : MonoBehaviour {
     private Canvas mouseCanvas;
     private Image mouseImage;
     private float screenymax;
+    public InventoryDB inventorydb;
     private float screenxmax;
+    public GameObject inventoryPockets;
     public Camera sceneCamera;
     private int selectedObj=0;
     public List<GameObject> listOfSelectableGameObjects;
     private bool _inputDelayOn = false;
     private float _inputDelayTimer=0.0f;
     public float inputDelayTime = 0.5f;
-    GameObject inventorycanvas;
+    public GameObject inventorycanvas;
+    public GameObject spotlight;
     void Start()
     {
+        spotlight = GameObject.Find("Spotlight");
+        sceneCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
+        screenymax = Screen.height * 0.95f;
+
+        screenxmax = Screen.width * 0.99f;
         //hide the inventory
         inventorycanvas = GameObject.Find("InventoryCanvas");
+        inventorydb = ScriptableObject.CreateInstance<InventoryDB>();
+        inventorydb.PopulateDB();
+        inventoryPockets = GameObject.Find("InventoryPockets");
+
+        inventorydb.initialize();
+        //RectTransform invRectTransform=inventorycanvas.GetComponent<RectTransform>();
+        //invRectTransform.localScale = new Vector2(2, 2);
+  
+     //   invRectTransform.sizeDelta = new Vector2(Screen.width, Screen.height);
+
+        //   invRectTransform.position = new Vector2(0 - (Screen.width/2), -1 * Screen.height / 2);
         inventorycanvas.SetActive(false);
 
         listOfSelectableGameObjects = new List<GameObject>();
@@ -41,12 +61,8 @@ public class RuckSack : MonoBehaviour {
         cursorCanvas = GameObject.Find("CursorCanvas");
         mouseCanvas = cursorCanvas.GetComponent<Canvas>();
         mouseImage = mouseCanvas.GetComponentInChildren<Image>();
-        sceneCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
-       
-
-        screenymax = Screen.height * 0.95f;
-                      
-        screenxmax = Screen.width * 0.99f;
+        
+      
         mouseTransform = mouseImage.GetComponent<RectTransform>();
         Cursor.visible = false;
     }
@@ -63,6 +79,8 @@ public class RuckSack : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        //todo .. prolly should move this to start and update it only when needed.
+        GameObject[] golist= GameObject.FindGameObjectsWithTag("SelectableObject");
         if (keyValue != null) { 
         }
         Vector3 delta;
@@ -124,12 +142,38 @@ public class RuckSack : MonoBehaviour {
 
 
         if (inventory) {
-            if (inventorycanvas.active)
+            if (inventorycanvas.activeSelf)
             {
+                
+                for (int i=0;i < inventoryPockets.transform.childCount;i++) {
+                    Transform go = (inventoryPockets.transform.GetChild(i));
+
+                    Destroy(go.gameObject);
+
+                }
+                inventoryPockets.transform.DetachChildren();
                 inventorycanvas.SetActive(false);
+               
             }
-            else { 
-                inventorycanvas.SetActive(true);
+            else {
+                ClearCursor();
+                //Not sure where to populate this
+                if (inventorydb.itemsInInventory.Count == 0)
+                {
+                    inventorycanvas.SetActive(true);
+                }
+
+                foreach (InventoryItem it in inventorydb.itemsInInventory)
+                {
+                    GameObject go = createGoInventoryItem(it);
+                    go.transform.SetParent(inventoryPockets.transform);
+                   
+                    //todo Why is this magic number needed???
+                    go.GetComponent<RectTransform>().anchoredPosition3D= new Vector3(0,0,-45);
+
+                    go.transform.localScale = Vector3.one;  
+                    inventorycanvas.SetActive(true);
+                }
             }
         }
 
@@ -151,7 +195,12 @@ public class RuckSack : MonoBehaviour {
             if (leftdirection )
             {
                 if (_inputDelayOn) return;
-                Debug.Log("howManyLeft");
+               
+                
+                    deselectAllItems(golist);
+
+                
+
                 if (selectedObj == 0)
                 {
                     selectedObj = listOfSelectableGameObjects.Count - 1;
@@ -181,11 +230,12 @@ public class RuckSack : MonoBehaviour {
             {
                 if (this._inputDelayOn)
                 {
-                    Debug.Log("how come this isn't sotpping this train?");
                     return;
                 }
-                Debug.Log(_inputDelayOn);
-                Debug.Log("howManyRight");
+
+                deselectAllItems(golist);
+
+
                 if (selectedObj == listOfSelectableGameObjects.Count - 1)
                 {
                     Vector2 newvec = sceneCamera.WorldToScreenPoint(new Vector2(
@@ -218,11 +268,224 @@ public class RuckSack : MonoBehaviour {
         {
             _inputDelayOn = false;
         }
+
+
+        Vector2 mousev = sceneCamera.ScreenToWorldPoint(mouseCursor.transform.position);
+
+        //This checks to see what is overlapping with the cursor
+        bool mousedOver = false;
+
+        Collider2D[] col = Physics2D.OverlapPointAll(mousev);
+
+
+
+        if (col.Length > 0)
+        {
+
+            foreach (Collider2D c in col)
+            {
+                if (c.gameObject.GetComponent<SceneItem>() != null)
+                {
+                    SceneItem sceneItem = c.gameObject.GetComponent<SceneItem>();
+                    mousedOver = true;
+
+
+
+
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        try
+                        {
+                            bool itemSelected = false;
+                            if (selectedItemKey != "nothing")
+                            {
+                                itemSelected = true;
+                            }
+                            bool selectingItem = false;
+                            bool isPortal;
+                            bool isInventory;
+
+
+                            isInventory = sceneItem.isInventory;
+                            isPortal = sceneItem.isPortal;
+                            //handle the action if it is NOT a portal.
+                            if (!isPortal && (isInventory || itemSelected))
+                            {
+                                Debug.Log("Sceneitem selected");
+                                if (cursorSocket.Count > 0)
+                                {
+                                    itemSelected = true;
+                                    var selectable = c.GetComponent<Selectable>();
+                                    if (selectable == null) return;
+                                    selectable.Select();
+                                }
+
+                                //sceneItem.keyValue = "juice";
+
+                                //Not sure if we want to worry about the rucksack's key value anymore.  
+                                //print("My name is " + ruckSack.keyValue);
+                                if (!isAlreadySelected(sceneItem) && !itemSelected)
+                                {
+
+                                    addTwinItem(sceneItem);
+                                    Destroy(sceneItem.gameObject);
+
+                                    //Todo, allow for craft, etc.
+                                    inventorycanvas.SetActive(false);
+                                    selectingItem = true;
+                                }
+                                if (!selectingItem && itemSelected)
+                                {
+                                    compareObjectAction(sceneItem);
+                                }
+                                //ruckSack.keyValue = sceneItem.keyValue;
+                            }//end if portal
+                            else if (!isPortal && !isInventory && !itemSelected)
+                            {
+                                //todo Need to add context menu here
+                                if (sceneItem.isPickupable)
+                                {
+
+                                    addToInventory(sceneItem);
+                                    listOfSelectableGameObjects.Clear();
+                                    populateListOfSelectableGameObjects(listOfSelectableGameObjects);
+                                    //Implement Wait Till animation completed
+                                    Destroy(sceneItem.gameObject);
+
+                                }
+                                else
+                                {
+                                    generateCannotPickupMessage(sceneItem.keyValue);
+                                }
+                            }
+                            else if (isPortal)
+                            {
+                                //If you're a portal, do this.  
+                                Zoomer zoom = (Zoomer)(sceneCamera.GetComponent<Zoomer>());
+                                zoom.ZoomToScene(sceneItem.keyValue, (sceneItem.transform));
+                            }
+                        }//end try
+                        catch (NullReferenceException n)
+                        {
+                            Debug.Log("ITEM NOT SET as a SCENEITEM");
+                        }
+                    }//end if
+
+
+                }//end if
+
+
+
+                if (c.gameObject.GetComponent<SpriteRenderer>() != null)
+                {
+
+                    SpriteRenderer spriteRenderer = c.gameObject.GetComponent<SpriteRenderer>();
+                    if (!spriteRenderer.material.name.Contains("HighlightMat"))
+                    {
+                        {
+
+                            spotlight.GetComponent<Light>().enabled = true;
+                            spotlight.transform.position = new Vector3(spriteRenderer.gameObject.transform.position.x, spriteRenderer.gameObject.transform.position.y, spotlight.transform.position.z);
+                            spriteRenderer.material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Materials/HighlightMat.mat", typeof(Material));
+                        }
+                    }
+                }
+                else if (c.gameObject.GetComponent<Image>() != null)
+                {
+
+                    Image spriteImage = c.gameObject.GetComponent<Image>();
+                    if (!spriteImage.material.name.Contains("HighlightMat"))
+                    {
+                        spriteImage.material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Materials/HighlightMat.mat", typeof(Material));
+                    }
+                }
+
+            }
+
+         
+            
+        }//end if col length
         
+        if (!mousedOver)
+        {
+            deselectAllItems(golist);
+            
+        }
+
+
+
+
+
+
 
 
 
     }
+
+    private void deselectAllItems(GameObject[] golist)
+    {
+        foreach (GameObject go in golist)
+        {
+            if (go.GetComponent<SpriteRenderer>() != null)
+            {
+                SpriteRenderer spriteRenderer = go.GetComponent<SpriteRenderer>();
+                spotlight.GetComponent<Light>().enabled = false;
+                spriteRenderer.material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Materials/LightSpriteMat.mat", typeof(Material));
+            }
+            else if (go.GetComponent<SpriteRenderer>() == null)
+            {
+                Image spriteImage = go.GetComponent<Image>();
+                spotlight.GetComponent<Light>().enabled = false;
+                spriteImage.material = (Material)AssetDatabase.LoadAssetAtPath("Assets/Materials/PlainMat.mat", typeof(Material));
+            }
+
+        }
+
+    }
+
+    public void generateCannotPickupMessage(string keyValue)
+    {
+        switch (keyValue)
+        {
+            case "IMATABLE":
+                Debug.Log("Thine armor is not spacious enough, m'lord.");
+                break;
+            default:
+                Debug.Log("Ye cannot pick that up.");
+                break;
+        }
+    }
+
+    internal void addToInventory(SceneItem sceneItem)
+    {
+
+        Debug.Log("Adding to Inventory");
+
+        if (inventorydb.itemsInInventory.Count == 0)
+        {
+            inventorydb.itemsInInventory.Add(inventorydb.inventoryItemDictionary[sceneItem.keyValue]);
+        }
+        else
+        {
+            bool notfound = true;
+            foreach (InventoryItem it in inventorydb.itemsInInventory)
+            {
+
+                if ((it.keyValue == sceneItem.keyValue))
+                {
+                    notfound = false;
+                    Debug.Log("already added to inventory");
+                    break;
+
+                }
+            }
+            if (notfound)
+            {
+                inventorydb.itemsInInventory.Add(inventorydb.inventoryItemDictionary[sceneItem.keyValue]);
+            }
+        }//else
+    }
+
     private int SortByPositionX(GameObject g1, GameObject g2)
     {
         return g1.transform.position.x.CompareTo(g2.transform.position.x);
@@ -240,11 +503,28 @@ public class RuckSack : MonoBehaviour {
     {
         // Check the value of the item to see if it's the right \\corresponding value     
         cursorSocket.Add(item.keyValue, item);
+
+
+        //don't delete
+        //this is the code that makes the item selected, and changes the sprite of the cursor to match.    
         selectedItemKey = item.keyValue;
-       Sprite tempsprite= (item.GetComponent<SpriteRenderer>()).sprite;
+
+        Sprite tempsprite;
+        if (item.GetComponent<SpriteRenderer>() != null)
+        {
+            tempsprite = (item.GetComponent<SpriteRenderer>()).sprite;
+        }
+        else
+        {
+            tempsprite = (item.GetComponent<Image>().sprite);
+        }
         mouseImage.sprite = tempsprite;
- 
+
+       
+
     }
+
+     
 
 
     //This method handles the compare operation when you use an object on another.  
@@ -276,6 +556,20 @@ public class RuckSack : MonoBehaviour {
                     break;
                 default:
                     Debug.Log("That's not the intended use for a chair");
+                    break;
+            }
+        }
+
+        else if (selectedItemKey == "IMACANDLE")
+        {
+            switch (item.keyValue)
+            {
+                case "IMATABLE":
+                    Debug.Log("You drop the candle, and it snuffs out. Nice going, m'lord! ");
+                    removeInventoryItemWithKeyvalue(keyValue);
+                    break;
+                default:
+                    Debug.Log("Tsk tsk... What would your mother say...");
                     break;
             }
         }
@@ -327,4 +621,54 @@ public class RuckSack : MonoBehaviour {
             return sprite.texture;
     }
 
+
+    public GameObject createGoInventoryItem(InventoryItem it)
+    {
+        GameObject go = new GameObject();
+        go.AddComponent<ActionHandler>();
+        go.GetComponent<ActionHandler>().ruckSack = this;
+        go.GetComponent<ActionHandler>().cursorobj = mouseCursor;
+        go.AddComponent<BoxCollider2D>();
+        go.GetComponent<BoxCollider2D>().size = new Vector2(20, 20);
+        go.AddComponent<Image>();
+        go.GetComponent<Image>().sprite = it.sprite;
+        go.GetComponent<Image>().preserveAspect = true;
+        go.GetComponent<ActionHandler>().spriteImage = go.GetComponent<Image>();
+        go.GetComponent<ActionHandler>().spriteImage.sprite = it.sprite;
+        go.name = it.name;
+        
+        //Add ToolTip with description
+        go.AddComponent<SceneItem>();
+        go.GetComponent<SceneItem>().name = it.name;
+        go.GetComponent<SceneItem>().keyValue = it.keyValue;
+        go.GetComponent<SceneItem>().isInventory = true;
+        return go;
+    }
+    public void ClearCursor()
+    {
+        cursorSocket.Clear();
+        selectedItemKey = "nothing";
+        mouseCursor.GetComponent<Image>().sprite =
+            Sprite.Create(NormalCursor,
+            new Rect(0, 0, NormalCursor.width,
+            NormalCursor.height), new Vector2(0.5f, 0.5f));
+    }
+
+    public void removeInventoryItemWithKeyvalue(string keyValue)
+    {
+        int elementToDestroy=0;
+        for (int i=0;i < inventorydb.itemsInInventory.Count;i++)
+        {
+            if (selectedItemKey == keyValue)
+            {
+                elementToDestroy = i;
+            }
+        }
+        //todo:  kind of worried about this implementation
+       
+            inventorydb.itemsInInventory.RemoveAt(elementToDestroy);
+
+        ClearCursor();
+        
+    }
 }
