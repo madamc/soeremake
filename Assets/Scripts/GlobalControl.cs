@@ -6,6 +6,7 @@ public class GlobalControl : MonoBehaviour {
     public static GlobalControl Instance;
     public List<InventoryItem> itemsInInventory;
     public List<GameObject> listOfAllItems;
+    public float globalCameraSize=120f;
     public Dictionary<string, InventoryItem> inventoryItemDictionary;
 
     void Awake()
