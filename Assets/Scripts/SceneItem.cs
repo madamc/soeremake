@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class SceneItem : MonoBehaviour {
@@ -23,6 +24,7 @@ public class SceneItem : MonoBehaviour {
     public bool isLookable;
     public bool isContextMenuButton;
     public List<String> responses;
+    public UnityAction contextButtonClickListener;
 
     public void GiveKeyValue(String givenKeyValue)
     {
@@ -68,8 +70,10 @@ public class SceneItem : MonoBehaviour {
         
     }
 
-    private void setUpPickupListener()
+    public void destroyListener()
     {
+        EventManager.StopListening(this.GetInstanceID().ToString(), contextButtonClickListener);
+
 
     }
 

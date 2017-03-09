@@ -313,7 +313,7 @@ public class RuckSack : MonoBehaviour {
                         if (sceneItem.isContextMenuButton)
                         {
                             Debug.Log("fire Trigger");
-                            EventManager.TriggerEvent("pickup");
+                            EventManager.TriggerEvent(sceneItem.GetInstanceID().ToString());
                         }
                         try
                             {
@@ -467,10 +467,29 @@ public class RuckSack : MonoBehaviour {
             button.transform.SetParent(contextPanel.transform,false);
             SceneItem it = button.GetComponent<SceneItem>();
 
-            UnityAction pickupListener = new UnityAction(()=>PickUpObjectWithMenu(si,button));
-            EventManager.StartListening("pickup", pickupListener);
+            UnityAction pickupListener = new UnityAction(()=>PickUpObjectWithMenu(si));
+            si.contextButtonClickListener = pickupListener;
+            EventManager.StartListening(it.GetInstanceID().ToString(), pickupListener);
             Debug.Log("Start Listening");
          
+
+        }
+
+        if (si.isLookable)
+        {
+            GameObject button = buttonObjectPool.GetObject();
+            button.name = "Look at";
+            // todo:  probably should implement some sort of string resource here:
+            button.GetComponentInChildren<Text>().text = "Look at";
+
+            button.transform.SetParent(contextPanel.transform, false);
+            SceneItem it = button.GetComponent<SceneItem>();
+
+            UnityAction pickupListener = new UnityAction(() => LookAtSceneItemWithMenu(si));
+            si.contextButtonClickListener = pickupListener;
+            EventManager.StartListening(it.GetInstanceID().ToString(), pickupListener);
+            Debug.Log("Start Listening");
+
 
         }
 
@@ -478,7 +497,31 @@ public class RuckSack : MonoBehaviour {
 
     }
 
-    private void PickUpObjectWithMenu(SceneItem si, GameObject button)
+    public void LookAtSceneItemWithMenu(SceneItem si)
+    {
+        Debug.Log(si.Description);
+
+        //also, need to learn to recycle.  
+        si.destroyListener();
+        //todo:  this isn't working for some reason.  
+
+
+        clearContextMenuButtons();
+        contextPanel.SetActive(false);
+    }
+
+    //Return all buttons to the pool for the next context menu
+    private void clearContextMenuButtons()
+    {
+        int count = contextPanel.transform.GetChildCount();
+        for (int i=0;i<count; i++)
+        {
+            GameObject go = contextPanel.transform.GetChild(0).gameObject;
+            buttonObjectPool.ReturnObject(go);
+        }
+    }
+
+    public void PickUpObjectWithMenu(SceneItem si)
     {
         //todo Start recycling game objects, dude
         Debug.Log("Caught Listener");
@@ -489,12 +532,13 @@ public class RuckSack : MonoBehaviour {
         //Implement Wait Till animation completed
         //MUST STOP LISTENING
         //also, need to learn to recycle.  
+        si.destroyListener();
         Destroy(si.gameObject);
         //todo:  this isn't working for some reason.  
         listOfSelectableGameObjects.Clear();
         populateListOfSelectableGameObjects(listOfSelectableGameObjects);
 
-        buttonObjectPool.ReturnObject(button);
+        clearContextMenuButtons();
         contextPanel.SetActive(false);
 
     }
