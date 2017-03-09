@@ -15,6 +15,14 @@ public class SceneItem : MonoBehaviour {
     public String keyValue;
     internal bool isInventory;
     public bool isPickupable;
+    public bool isTalkToable;
+    public bool isEdible;
+    public bool isEquipable;
+    public bool isGiveable;
+    public bool isFightable;
+    public bool isLookable;
+    public bool isContextMenuButton;
+    public List<String> responses;
 
     public void GiveKeyValue(String givenKeyValue)
     {
@@ -41,9 +49,28 @@ public class SceneItem : MonoBehaviour {
 
     }
 
+    public int GetBoolCount()
+    {
+        int counter = 0;
+        if (isPickupable) { counter++; }
+        if (isEdible) { counter++; }
+        if (isEquipable) { counter++; }
+        if (isFightable) { counter++; }
+        if (isGiveable) { counter++; }
+        if (isTalkToable) { counter++; }
+        if (isLookable) { counter++; }
+        return counter;
+      
+    }
+
     private void Awake()
     {
         
+    }
+
+    private void setUpPickupListener()
+    {
+
     }
 
 }

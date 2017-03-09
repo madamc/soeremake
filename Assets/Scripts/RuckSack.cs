@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class RuckSack : MonoBehaviour {
@@ -35,8 +36,10 @@ public class RuckSack : MonoBehaviour {
     public GameObject inventorycanvas;
     public GameObject spotlight;
     public GameObject contextPanel;
+    public SimpleObjectPool buttonObjectPool;
     void Start()
     {
+        contextPanel.SetActive(false);
         spotlight = GameObject.Find("Spotlight");
         sceneCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
         screenymax = Screen.height * 0.95f;
@@ -216,7 +219,7 @@ public class RuckSack : MonoBehaviour {
                     selectedObj = listOfSelectableGameObjects.Count - 1;
                     Vector2 newvec = sceneCamera.WorldToScreenPoint(new Vector2(
                         listOfSelectableGameObjects[listOfSelectableGameObjects.Count - 1].transform.position.x,
-                        listOfSelectableGameObjects[listOfSelectableGameObjects.Count - 1].transform.position.y));
+                        listOfSelectableGameObjects[listOfSelectableGameObjects.Count - 1].transform.position.y-mouseCursor.GetComponent<BoxCollider2D>().offset.y));
              //       newvec.y = newvec.y + listOfSelectableGameObjects[0].transform.localScale.y *
                //         listOfSelectableGameObjects[listOfSelectableGameObjects.Count -1].GetComponent<SpriteRenderer>().sprite.bounds.size.y;
                     mouseTransform.position =newvec;
@@ -225,7 +228,7 @@ public class RuckSack : MonoBehaviour {
                 {
                     Vector2 newvec = sceneCamera.WorldToScreenPoint(new Vector2(
                     listOfSelectableGameObjects[selectedObj - 1].transform.position.x,
-                    listOfSelectableGameObjects[selectedObj - 1].transform.position.y));
+                    listOfSelectableGameObjects[selectedObj - 1].transform.position.y - mouseCursor.GetComponent<BoxCollider2D>().offset.y));
              //       newvec.y = newvec.y + listOfSelectableGameObjects[0].transform.localScale.y *
              //          listOfSelectableGameObjects[selectedObj-1].GetComponent<SpriteRenderer>().sprite.bounds.size.y;
                        mouseTransform.position = newvec;
@@ -250,7 +253,7 @@ public class RuckSack : MonoBehaviour {
                 {
                     Vector2 newvec = sceneCamera.WorldToScreenPoint(new Vector2(
                         listOfSelectableGameObjects[0].transform.position.x,
-                        listOfSelectableGameObjects[0].transform.position.y));
+                        listOfSelectableGameObjects[0].transform.position.y - mouseCursor.GetComponent<BoxCollider2D>().offset.y));
              //       newvec.y = newvec.y + listOfSelectableGameObjects[0].transform.localScale.y * listOfSelectableGameObjects[0].GetComponent<SpriteRenderer>().sprite.bounds.size.y;
                     
 
@@ -261,7 +264,7 @@ public class RuckSack : MonoBehaviour {
                 {
                     Vector2 newvec= sceneCamera.WorldToScreenPoint(new Vector2(
                         listOfSelectableGameObjects[selectedObj + 1].transform.position.x,
-                        listOfSelectableGameObjects[selectedObj + 1].transform.position.y));
+                        listOfSelectableGameObjects[selectedObj + 1].transform.position.y - mouseCursor.GetComponent<BoxCollider2D>().offset.y));
               //      newvec.y = newvec.y + listOfSelectableGameObjects[selectedObj + 1].transform.localScale.y 
               //          * listOfSelectableGameObjects[selectedObj + 1].GetComponent<SpriteRenderer>().sprite.bounds.size.y;
                     mouseTransform.position = newvec;
@@ -280,7 +283,8 @@ public class RuckSack : MonoBehaviour {
         }
 
 
-        Vector2 mousev = sceneCamera.ScreenToWorldPoint(mouseCursor.transform.position);
+        //This breaks the move with keyboard thing... again.  Need to find a new offset. 
+        Vector2 mousev = sceneCamera.ScreenToWorldPoint(new Vector3(mouseCursor.transform.position.x,mouseCursor.transform.position.y + mouseCursor.GetComponent<BoxCollider2D>().offset.y, mouseCursor.transform.position.z));
 
         //This checks to see what is overlapping with the cursor
         bool mousedOver = false;
@@ -300,88 +304,112 @@ public class RuckSack : MonoBehaviour {
                     mousedOver = true;
 
 
+                 
+                 
 
-
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        try
+                        if (Input.GetMouseButtonDown(0))
                         {
-                            bool itemSelected = false;
-                            if (selectedItemKey != "nothing")
-                            {
-                                itemSelected = true;
-                            }
-                            bool selectingItem = false;
-                            bool isPortal;
-                            bool isInventory;
 
-
-                            isInventory = sceneItem.isInventory;
-                            isPortal = sceneItem.isPortal;
-                            //handle the action if it is NOT a portal.
-                            if (!isPortal && (isInventory || itemSelected))
+                        if (sceneItem.isContextMenuButton)
+                        {
+                            Debug.Log("fire Trigger");
+                            EventManager.TriggerEvent("pickup");
+                        }
+                        try
                             {
-                                Debug.Log("Sceneitem selected");
-                                if (cursorSocket.Count > 0)
+                                bool itemSelected = false;
+                                if (selectedItemKey != "nothing")
                                 {
                                     itemSelected = true;
-                                    var selectable = c.GetComponent<Selectable>();
-                                    if (selectable == null) return;
-                                    selectable.Select();
                                 }
+                                bool selectingItem = false;
+                                bool isPortal;
+                                bool isInventory;
 
-                                //sceneItem.keyValue = "juice";
 
-                                //Not sure if we want to worry about the rucksack's key value anymore.  
-                                //print("My name is " + ruckSack.keyValue);
-                                if (!isAlreadySelected(sceneItem) && !itemSelected)
+                                isInventory = sceneItem.isInventory;
+                                isPortal = sceneItem.isPortal;
+                                //handle the action if it is NOT a portal.
+                                if (!isPortal && (isInventory || itemSelected))
                                 {
+                                    Debug.Log("Sceneitem selected");
+                                    if (cursorSocket.Count > 0)
+                                    {
+                                        itemSelected = true;
+                                        var selectable = c.GetComponent<Selectable>();
+                                        if (selectable == null) return;
+                                        selectable.Select();
+                                    }
 
-                                    addTwinItem(sceneItem);
-                                    Destroy(sceneItem.gameObject);
+                                    //sceneItem.keyValue = "juice";
 
-                                    //Todo, allow for craft, etc.
-                                    inventorycanvas.SetActive(false);
-                                    selectingItem = true;
-                                }
-                                if (!selectingItem && itemSelected)
+                                    //Not sure if we want to worry about the rucksack's key value anymore.  
+                                    //print("My name is " + ruckSack.keyValue);
+                                    if (!isAlreadySelected(sceneItem) && !itemSelected)
+                                    {
+
+                                        addTwinItem(sceneItem);
+                                        Destroy(sceneItem.gameObject);
+
+                                        //Todo, allow for craft, etc.
+                                        inventorycanvas.SetActive(false);
+                                        selectingItem = true;
+                                    }
+                                    if (!selectingItem && itemSelected)
+                                    {
+                                        compareObjectAction(sceneItem);
+                                    }
+                                    //ruckSack.keyValue = sceneItem.keyValue;
+                                }//end if portal
+                                else if (!isPortal && !isInventory && !itemSelected)
                                 {
-                                    compareObjectAction(sceneItem);
+                                    //todo Need to add context menu here
+                                    if (sceneItem.isPickupable && sceneItem.GetBoolCount() > 1)
+                                    {
+                                        //If this sceneitem can be picked up, but there are more options to interact with it,
+                                        //create a context menu
+                                        contextCreator(sceneItem);
+                                    }
+                                    else
+                                    if (sceneItem.isPickupable && sceneItem.GetBoolCount() == 1)
+                                    {
+                                        //if it is pickupable, and there are no other options to interact
+                                        //just pick it up.  
+
+                                        addToInventory(sceneItem);
+
+
+                                        //Implement Wait Till animation completed
+
+                                        //also, need to learn to recycle.  
+                                        Destroy(sceneItem.gameObject);
+                                        //todo:  this isn't working for some reason.  
+                                        listOfSelectableGameObjects.Clear();
+                                        populateListOfSelectableGameObjects(listOfSelectableGameObjects);
+                                    }
+                                    else if (sceneItem.GetBoolCount() > 0 && !sceneItem.isPickupable)
+                                    {
+                                        //If if you can't pick it up, and it isn't a portal, make a context menu based on what's left.
+                                        contextCreator(sceneItem);
+                                    }
+                                    else
+                                    {
+                                        generateCannotPickupMessage(sceneItem.keyValue);
+                                    }
                                 }
-                                //ruckSack.keyValue = sceneItem.keyValue;
-                            }//end if portal
-                            else if (!isPortal && !isInventory && !itemSelected)
+                                else if (isPortal)
+                                {
+                                    //If you're a portal, do this.  
+                                    Zoomer zoom = (Zoomer)(sceneCamera.GetComponent<Zoomer>());
+                                    zoom.ZoomToScene(sceneItem.keyValue, (sceneItem.transform));
+                                }
+                            }//end try
+                            catch (NullReferenceException n)
                             {
-                                //todo Need to add context menu here
-                                contextCreator(sceneItem);
-
-                                if (sceneItem.isPickupable)
-                                {
-
-                                    addToInventory(sceneItem);
-                                    listOfSelectableGameObjects.Clear();
-                                    populateListOfSelectableGameObjects(listOfSelectableGameObjects);
-                                    //Implement Wait Till animation completed
-                                    Destroy(sceneItem.gameObject);
-
-                                }
-                                else
-                                {
-                                    generateCannotPickupMessage(sceneItem.keyValue);
-                                }
+                                Debug.Log("ITEM NOT SET as a SCENEITEM");
                             }
-                            else if (isPortal)
-                            {
-                                //If you're a portal, do this.  
-                                Zoomer zoom = (Zoomer)(sceneCamera.GetComponent<Zoomer>());
-                                zoom.ZoomToScene(sceneItem.keyValue, (sceneItem.transform));
-                            }
-                        }//end try
-                        catch (NullReferenceException n)
-                        {
-                            Debug.Log("ITEM NOT SET as a SCENEITEM");
-                        }
-                    }//end if
+                        }//end if
+                  
 
 
                 }//end if
@@ -428,13 +456,46 @@ public class RuckSack : MonoBehaviour {
 
     public void contextCreator(SceneItem si)
     {
+       
         if (si.isPickupable)
         {
-            contextPanel.AddComponent<Button>();
-
+            GameObject button = buttonObjectPool.GetObject();
+            button.name = "Pick Up";
+            // todo:  probably should implement some sort of string resource here:
+            button.GetComponentInChildren<Text>().text = "Pick Up";
             
+            button.transform.SetParent(contextPanel.transform,false);
+            SceneItem it = button.GetComponent<SceneItem>();
+
+            UnityAction pickupListener = new UnityAction(()=>PickUpObjectWithMenu(si,button));
+            EventManager.StartListening("pickup", pickupListener);
+            Debug.Log("Start Listening");
+         
 
         }
+
+        contextPanel.SetActive(true);
+
+    }
+
+    private void PickUpObjectWithMenu(SceneItem si, GameObject button)
+    {
+        //todo Start recycling game objects, dude
+        Debug.Log("Caught Listener");
+
+        addToInventory(si);
+
+
+        //Implement Wait Till animation completed
+        //MUST STOP LISTENING
+        //also, need to learn to recycle.  
+        Destroy(si.gameObject);
+        //todo:  this isn't working for some reason.  
+        listOfSelectableGameObjects.Clear();
+        populateListOfSelectableGameObjects(listOfSelectableGameObjects);
+
+        buttonObjectPool.ReturnObject(button);
+        contextPanel.SetActive(false);
 
     }
 
