@@ -80,5 +80,8 @@ MonoBehaviour:
   inputDelayTime: 0.3
   inventorycanvas: {fileID: 0}
   spotlight: {fileID: 0}
+  jibberJabberPanel: {fileID: 0}
+  jibberJabber: {fileID: 0}
   contextPanel: {fileID: 0}
+  contextMenuOffset: 50
   buttonObjectPool: {fileID: 114163943681383998}

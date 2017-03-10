@@ -35,10 +35,15 @@ public class RuckSack : MonoBehaviour {
     public float inputDelayTime = 0.5f;
     public GameObject inventorycanvas;
     public GameObject spotlight;
+    public GameObject jibberJabberPanel;
+    public JibberJabber jibberJabber;
     public GameObject contextPanel;
+    public float contextMenuOffset =50f;
     public SimpleObjectPool buttonObjectPool;
     void Start()
     {
+        jibberJabber = jibberJabberPanel.GetComponent<JibberJabber>();
+        
         contextPanel.SetActive(false);
         spotlight = GameObject.Find("Spotlight");
         sceneCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
@@ -296,8 +301,10 @@ public class RuckSack : MonoBehaviour {
         if (col.Length > 0)
         {
 
-            foreach (Collider2D c in col)
-            {
+           Collider2D c = col[0];
+            //todo:  not sure about this, ignoring any other collisions.
+            //foreach (Collider2D c in col)
+            //{
                 if (c.gameObject.GetComponent<SceneItem>() != null)
                 {
                     SceneItem sceneItem = c.gameObject.GetComponent<SceneItem>();
@@ -313,7 +320,7 @@ public class RuckSack : MonoBehaviour {
                         if (sceneItem.isContextMenuButton)
                         {
                             Debug.Log("fire Trigger");
-                            EventManager.TriggerEvent(sceneItem.GetInstanceID().ToString());
+                            EventManager.TriggerEvent(sceneItem.name);
                         }
                         try
                             {
@@ -440,7 +447,7 @@ public class RuckSack : MonoBehaviour {
                     }
                 }
 
-            }
+            //}
 
          
             
@@ -463,13 +470,15 @@ public class RuckSack : MonoBehaviour {
             button.name = "Pick Up";
             // todo:  probably should implement some sort of string resource here:
             button.GetComponentInChildren<Text>().text = "Pick Up";
-            
-            button.transform.SetParent(contextPanel.transform,false);
+
+            button.transform.SetParent(contextPanel.transform, false);
+            button.transform.position = new Vector3(button.transform.position.x, transform.position.y, contextPanel.transform.position.z);
+            button.transform.localScale = Vector3.one;
             SceneItem it = button.GetComponent<SceneItem>();
 
             UnityAction pickupListener = new UnityAction(()=>PickUpObjectWithMenu(si));
             si.contextButtonClickListener = pickupListener;
-            EventManager.StartListening(it.GetInstanceID().ToString(), pickupListener);
+            EventManager.StartListening(it.name, pickupListener);
             Debug.Log("Start Listening");
          
 
@@ -483,15 +492,18 @@ public class RuckSack : MonoBehaviour {
             button.GetComponentInChildren<Text>().text = "Look at";
 
             button.transform.SetParent(contextPanel.transform, false);
+            button.transform.position = new Vector3(button.transform.position.x, transform.position.y, contextPanel.transform.position.z);
+            button.transform.localScale= Vector3.one;
             SceneItem it = button.GetComponent<SceneItem>();
 
             UnityAction pickupListener = new UnityAction(() => LookAtSceneItemWithMenu(si));
             si.contextButtonClickListener = pickupListener;
-            EventManager.StartListening(it.GetInstanceID().ToString(), pickupListener);
+            EventManager.StartListening(it.name, pickupListener);
             Debug.Log("Start Listening");
 
 
         }
+        contextPanel.transform.position = new Vector3(si.transform.position.x + contextMenuOffset, si.transform.position.y, 1f);
 
         contextPanel.SetActive(true);
 
@@ -500,6 +512,8 @@ public class RuckSack : MonoBehaviour {
     public void LookAtSceneItemWithMenu(SceneItem si)
     {
         Debug.Log(si.Description);
+        jibberJabber.textToShow = si.Description;
+        jibberJabberPanel.SetActive(true);
 
         //also, need to learn to recycle.  
         si.destroyListener();
