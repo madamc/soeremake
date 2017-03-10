@@ -38,12 +38,14 @@ public class RuckSack : MonoBehaviour {
     public GameObject jibberJabberPanel;
     public JibberJabber jibberJabber;
     public GameObject contextPanel;
+    GameObject[] golist;
     public float contextMenuOffset =50f;
     public SimpleObjectPool buttonObjectPool;
     void Start()
     {
         jibberJabber = jibberJabberPanel.GetComponent<JibberJabber>();
-        
+     
+
         contextPanel.SetActive(false);
         spotlight = GameObject.Find("Spotlight");
         sceneCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
@@ -88,8 +90,10 @@ public class RuckSack : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        //todo .. prolly should move this to start and update it only when needed.
-        GameObject[] golist= GameObject.FindGameObjectsWithTag("SelectableObject");
+
+      
+        ////todo .. prolly should move this to start and update it only when needed.
+        golist= GameObject.FindGameObjectsWithTag("SelectableObject");
         if (keyValue != null) { 
         }
         Vector3 delta;
@@ -167,6 +171,7 @@ public class RuckSack : MonoBehaviour {
                     Transform go = (inventoryPockets.transform.GetChild(i));
 
                     Destroy(go.gameObject);
+                    
 
                 }
                 inventoryPockets.transform.DetachChildren();
@@ -316,12 +321,22 @@ public class RuckSack : MonoBehaviour {
 
                         if (Input.GetMouseButtonDown(0))
                         {
+                    //hide the jibberjabber
+                    if (!jibberJabber.isHid) { 
+                        jibberJabber.hideme();
+                    }
 
-                        if (sceneItem.isContextMenuButton)
+                    if (sceneItem.isContextMenuButton)
                         {
                             Debug.Log("fire Trigger");
                             EventManager.TriggerEvent(sceneItem.name);
                         }
+                    
+                    else if (!c.gameObject.name.Contains("contextPanel"))
+                    {
+                        //if it's not a context menu button, then hide the context panel.
+                        contextPanel.SetActive(false);
+                    }
                         try
                             {
                                 bool itemSelected = false;
@@ -357,9 +372,10 @@ public class RuckSack : MonoBehaviour {
 
                                         addTwinItem(sceneItem);
                                         Destroy(sceneItem.gameObject);
+                                     
 
-                                        //Todo, allow for craft, etc.
-                                        inventorycanvas.SetActive(false);
+                                //Todo, allow for craft, etc.
+                                inventorycanvas.SetActive(false);
                                         selectingItem = true;
                                     }
                                     if (!selectingItem && itemSelected)
@@ -390,6 +406,7 @@ public class RuckSack : MonoBehaviour {
 
                                         //also, need to learn to recycle.  
                                         Destroy(sceneItem.gameObject);
+                                       
                                         //todo:  this isn't working for some reason.  
                                         listOfSelectableGameObjects.Clear();
                                         populateListOfSelectableGameObjects(listOfSelectableGameObjects);
@@ -452,7 +469,14 @@ public class RuckSack : MonoBehaviour {
          
             
         }//end if col length
-        
+        else 
+        if (Input.anyKeyDown) {
+            if (!jibberJabber.isHid) { 
+                jibberJabber.hideme();
+            }
+            contextPanel.SetActive(false);
+                }
+
         if (!mousedOver)
         {
             deselectAllItems(golist);
@@ -512,8 +536,7 @@ public class RuckSack : MonoBehaviour {
     public void LookAtSceneItemWithMenu(SceneItem si)
     {
         Debug.Log(si.Description);
-        jibberJabber.textToShow = si.Description;
-        jibberJabberPanel.SetActive(true);
+        jibberJabber.setTextandShow(si.Description);
 
         //also, need to learn to recycle.  
         si.destroyListener();
@@ -548,6 +571,7 @@ public class RuckSack : MonoBehaviour {
         //also, need to learn to recycle.  
         si.destroyListener();
         Destroy(si.gameObject);
+       
         //todo:  this isn't working for some reason.  
         listOfSelectableGameObjects.Clear();
         populateListOfSelectableGameObjects(listOfSelectableGameObjects);
