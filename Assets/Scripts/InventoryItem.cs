@@ -9,6 +9,7 @@ public class InventoryItem : MonoBehaviour {
     public string keyValue;
     public Sprite sprite;
     public int id;
+    public SceneItem sceneItem;
 
    public InventoryItem(string name, string description, string keyValue)
     {

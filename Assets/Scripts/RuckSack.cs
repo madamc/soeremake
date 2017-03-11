@@ -336,6 +336,7 @@ public class RuckSack : MonoBehaviour {
                     {
                         //if it's not a context menu button, then hide the context panel.
                         contextPanel.SetActive(false);
+                        clearContextMenuButtons();
                     }
                         try
                             {
@@ -363,15 +364,23 @@ public class RuckSack : MonoBehaviour {
                                         selectable.Select();
                                     }
 
-                                    //sceneItem.keyValue = "juice";
 
-                                    //Not sure if we want to worry about the rucksack's key value anymore.  
-                                    //print("My name is " + ruckSack.keyValue);
-                                    if (!isAlreadySelected(sceneItem) && !itemSelected)
+                                else if (sceneItem.GetBoolCount() > 0 )
+                                {
+                                    //If if you can't pick it up, and it isn't a portal, make a context menu based on what's left.
+                                  //  contextCreator(sceneItem);
+
+                                   //not implemented for now. 
+                                }
+                            //sceneItem.keyValue = "juice";
+
+                            //Not sure if we want to worry about the rucksack's key value anymore.  
+                            //print("My name is " + ruckSack.keyValue);
+                            if (!isAlreadySelected(sceneItem) && !itemSelected)
                                     {
 
                                         addTwinItem(sceneItem);
-                                        Destroy(sceneItem.gameObject);
+                                       sceneItem.gameObject.SetActive(false);
                                      
 
                                 //Todo, allow for craft, etc.
@@ -415,6 +424,10 @@ public class RuckSack : MonoBehaviour {
                                     {
                                         //If if you can't pick it up, and it isn't a portal, make a context menu based on what's left.
                                         contextCreator(sceneItem);
+                                    }
+                                    else if (sceneItem.isContextMenuButton)
+                                    {
+                                        //Do nothing... handling the menu buttons elsewhere
                                     }
                                     else
                                     {
@@ -475,6 +488,7 @@ public class RuckSack : MonoBehaviour {
                 jibberJabber.hideme();
             }
             contextPanel.SetActive(false);
+            clearContextMenuButtons();
                 }
 
         if (!mousedOver)
@@ -490,40 +504,47 @@ public class RuckSack : MonoBehaviour {
        
         if (si.isPickupable)
         {
-            GameObject button = buttonObjectPool.GetObject();
-            button.name = "Pick Up";
-            // todo:  probably should implement some sort of string resource here:
-            button.GetComponentInChildren<Text>().text = "Pick Up";
+            addButtonToContextPanel(si, "Pick Up", PickUpObjectWithMenu);
 
-            button.transform.SetParent(contextPanel.transform, false);
-            button.transform.position = new Vector3(button.transform.position.x, transform.position.y, contextPanel.transform.position.z);
-            button.transform.localScale = Vector3.one;
-            SceneItem it = button.GetComponent<SceneItem>();
-
-            UnityAction pickupListener = new UnityAction(()=>PickUpObjectWithMenu(si));
-            si.contextButtonClickListener = pickupListener;
-            EventManager.StartListening(it.name, pickupListener);
-            Debug.Log("Start Listening");
-         
 
         }
 
         if (si.isLookable)
         {
-            GameObject button = buttonObjectPool.GetObject();
-            button.name = "Look at";
-            // todo:  probably should implement some sort of string resource here:
-            button.GetComponentInChildren<Text>().text = "Look at";
+            addButtonToContextPanel(si, "Look at", LookAtSceneItemWithMenu);
 
-            button.transform.SetParent(contextPanel.transform, false);
-            button.transform.position = new Vector3(button.transform.position.x, transform.position.y, contextPanel.transform.position.z);
-            button.transform.localScale= Vector3.one;
-            SceneItem it = button.GetComponent<SceneItem>();
 
-            UnityAction pickupListener = new UnityAction(() => LookAtSceneItemWithMenu(si));
-            si.contextButtonClickListener = pickupListener;
-            EventManager.StartListening(it.name, pickupListener);
-            Debug.Log("Start Listening");
+        }
+
+        if (si.isEdible)
+        {
+            addButtonToContextPanel(si, "Eat", EatSceneItemWithMenu);
+
+        }
+
+        if (si.isTalkToable)
+        {
+            addButtonToContextPanel(si, "Talk To", TalkToSceneItemWithMenu);
+        }
+        
+
+        //inventory items are a little different.  
+
+        if (si.isInventory)
+        {
+            addButtonToContextPanel(si, "Use", UseInventoryItemWithMenu);
+
+            if (si.isEdible)
+            {
+                addButtonToContextPanel(si, "Eat", EatSceneItemWithMenu);
+
+            }
+
+            if (si.isTalkToable)
+            {
+                addButtonToContextPanel(si, "Talk To", TalkToSceneItemWithMenu);
+            }
+
 
 
         }
@@ -531,6 +552,45 @@ public class RuckSack : MonoBehaviour {
 
         contextPanel.SetActive(true);
 
+    }
+
+    public void addButtonToContextPanel(SceneItem si, string buttonName, Action<SceneItem> methodName)
+    {
+        GameObject button = buttonObjectPool.GetObject();
+        button.name = buttonName;
+        // todo:  probably should implement some sort of string resource here:
+        button.GetComponentInChildren<Text>().text = buttonName;
+
+        button.transform.SetParent(contextPanel.transform, false);
+        button.transform.position = new Vector3(button.transform.position.x, transform.position.y, contextPanel.transform.position.z);
+        button.transform.localScale = Vector3.one;
+        SceneItem it = button.GetComponent<SceneItem>();
+
+        UnityAction pickupListener = new UnityAction(() => methodName(si));
+        si.contextButtonClickListener = pickupListener;
+        EventManager.StartListening(it.name, pickupListener);
+        Debug.Log("Start Listening");
+
+    }
+
+    public void EatSceneItemWithMenu(SceneItem si)
+    {
+        Debug.Log(si.eatMessage);
+        jibberJabber.setTextandShow(si.eatMessage);
+
+        //todo Make eat do something
+
+        //also, need to learn to recycle.  
+        si.destroyListener();
+
+        Destroy(si.gameObject);
+
+        //todo:  this isn't working for some reason.  
+        listOfSelectableGameObjects.Clear();
+        populateListOfSelectableGameObjects(listOfSelectableGameObjects);
+
+        clearContextMenuButtons();
+        contextPanel.SetActive(false);
     }
 
     public void LookAtSceneItemWithMenu(SceneItem si)
@@ -545,6 +605,19 @@ public class RuckSack : MonoBehaviour {
 
         clearContextMenuButtons();
         contextPanel.SetActive(false);
+    }
+
+    public void TalkToSceneItemWithMenu(SceneItem si)
+    {
+
+        //not implemented
+  
+    
+    }
+
+    public void UseInventoryItemWithMenu(SceneItem si)
+    {
+         //
     }
 
     //Return all buttons to the pool for the next context menu
@@ -607,22 +680,24 @@ public class RuckSack : MonoBehaviour {
         switch (keyValue)
         {
             case "IMATABLE":
-                Debug.Log("Thine armor is not spacious enough, m'lord.");
+                jibberJabber.setTextandShow("Thine armor is not spacious enough, m'lord.");
                 break;
             default:
-                Debug.Log("Ye cannot pick that up.");
+                jibberJabber.setTextandShow("Ye cannot pick that up.");
                 break;
         }
     }
 
     internal void addToInventory(SceneItem sceneItem)
     {
-
+        InventoryItem baseIT = inventorydb.inventoryItemDictionary[sceneItem.keyValue];
+        
         Debug.Log("Adding to Inventory");
 
         if (inventorydb.itemsInInventory.Count == 0)
         {
-            inventorydb.itemsInInventory.Add(inventorydb.inventoryItemDictionary[sceneItem.keyValue]);
+            baseIT.sceneItem = sceneItem;
+            inventorydb.itemsInInventory.Add(baseIT);
         }
         else
         {
@@ -640,7 +715,8 @@ public class RuckSack : MonoBehaviour {
             }
             if (notfound)
             {
-                inventorydb.itemsInInventory.Add(inventorydb.inventoryItemDictionary[sceneItem.keyValue]);
+                baseIT.sceneItem = sceneItem;
+                inventorydb.itemsInInventory.Add(baseIT);
             }
         }//else
     }
@@ -697,10 +773,10 @@ public class RuckSack : MonoBehaviour {
             switch (item.keyValue)
             {
                 case "IMACHAIR":
-                    Debug.Log("Couch-a-Chair, the ultimate in comfort");
+                    jibberJabber.setTextandShow("Couch-a-Chair, the ultimate in comfort");
                     break;
             default:
-                    Debug.Log("I don't know what you wanna do with that couch, man");
+                    jibberJabber.setTextandShow("I don't know what you wanna do with that couch, man");
                     break;
             }
         }
@@ -711,10 +787,10 @@ public class RuckSack : MonoBehaviour {
             switch (item.keyValue)
             {
                 case "IMACOUCH":
-                    Debug.Log("I don't think it'd  be safe to put the chair on the couch.");
+                    jibberJabber.setTextandShow("I don't think it'd  be safe to put the chair on the couch.");
                     break;
                 default:
-                    Debug.Log("That's not the intended use for a chair");
+                    jibberJabber.setTextandShow("That's not the intended use for a chair");
                     break;
             }
         }
@@ -724,11 +800,11 @@ public class RuckSack : MonoBehaviour {
             switch (item.keyValue)
             {
                 case "IMATABLE":
-                    Debug.Log("You drop the candle, and it snuffs out. Nice going, m'lord! ");
+                    jibberJabber.setTextandShow("You drop the candle, and it snuffs out. Nice going, m'lord! ");
                     removeInventoryItemWithKeyvalue(keyValue);
                     break;
                 default:
-                    Debug.Log("Tsk tsk... What would your mother say...");
+                    jibberJabber.setTextandShow("Tsk tsk... What would your mother say...");
                     break;
             }
         }
@@ -736,7 +812,7 @@ public class RuckSack : MonoBehaviour {
 
         //Catch all Debug statement to be able to find items with no case statements.  
         else {
-            Debug.Log("Okay, fine, I admit it, you haven't told me how to handle this object, yet");
+            jibberJabber.setTextandShow("Okay, fine, I admit it, you haven't told me how to handle this object, yet");
         }
 
         //item2
@@ -795,9 +871,12 @@ public class RuckSack : MonoBehaviour {
         go.GetComponent<ActionHandler>().spriteImage = go.GetComponent<Image>();
         go.GetComponent<ActionHandler>().spriteImage.sprite = it.sprite;
         go.name = it.name;
-        
+
         //Add ToolTip with description
         go.AddComponent<SceneItem>();
+        go.GetComponent<SceneItem>().isEdible = it.sceneItem.isEdible;
+        go.GetComponent<SceneItem>().isEquipable = it.sceneItem.isEquipable;
+        go.GetComponent<SceneItem>().isTalkToable = it.sceneItem.isTalkToable;
         go.GetComponent<SceneItem>().name = it.name;
         go.GetComponent<SceneItem>().keyValue = it.keyValue;
         go.GetComponent<SceneItem>().isInventory = true;

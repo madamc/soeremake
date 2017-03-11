@@ -23,6 +23,7 @@ public class SceneItem : MonoBehaviour {
     public bool isFightable;
     public bool isLookable;
     public bool isContextMenuButton;
+    public string eatMessage;
     public List<String> responses;
     public UnityAction contextButtonClickListener;
 
