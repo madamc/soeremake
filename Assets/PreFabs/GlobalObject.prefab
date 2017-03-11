@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1815950274152676}
+  m_IsPrefabParent: 1
+--- !u!1 &1815950274152676
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4730424470775666}
+  - component: {fileID: 114725500314479944}
+  m_Layer: 0
+  m_Name: GlobalObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4730424470775666
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1815950274152676}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -100}
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114725500314479944
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1815950274152676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4063694007545974599c1a5e0e3a747f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemsInInventory: []
+  listOfAllItems:
+  - {fileID: 1667367433654946, guid: b03fdefe010d1c6499598484387b18d5, type: 2}
+  - {fileID: 1582969935861374, guid: 866432ce28d9e9d4d9034d28b29ccb9d, type: 2}
+  - {fileID: 1605741864291042, guid: 85b0fc7f5e8a29f47a9616eb204b46d7, type: 2}
+  - {fileID: 1775497078096912, guid: 5c52f0efa062c414fab84371ae95f091, type: 2}
+  - {fileID: 1693149040411416, guid: 3766b655e72ff4e4f9e1c83b338ffcb0, type: 2}
+  - {fileID: 1991855295282346, guid: 18ed441a5c62ba64f9f66863e3e693fc, type: 2}
+  - {fileID: 1443524248772274, guid: 2f7a06a67ac491641a4a4ee530b647f5, type: 2}
+  - {fileID: 1232718950317024, guid: cafaa48bf5e0c514499549a5a68dab3c, type: 2}
+  - {fileID: 1049938287154048, guid: 138897972dd808846a2e20c4212fad06, type: 2}
+  - {fileID: 0}
+  globalCameraSize: 120
