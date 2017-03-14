@@ -73,7 +73,7 @@ public class SceneItem : MonoBehaviour {
 
     public void destroyListener()
     {
-        EventManager.StopListening(this.GetInstanceID().ToString(), contextButtonClickListener);
+        EventManager.StopListening(this.name, contextButtonClickListener);
 
 
     }
