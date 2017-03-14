@@ -1351,7 +1351,10 @@ MonoBehaviour:
   isLookable: 1
   isContextMenuButton: 0
   eatMessage: The candle is chewy and dissatisfying.
-  responses: []
+  responses:
+  - 'Candle: I miss you... you never visit, you never call'
+  - 'You: I don''t usually speak to candles.'
+  - 'Candle: Well, that''s where we different.'
 --- !u!61 &1693297248
 BoxCollider2D:
   m_ObjectHideFlags: 0

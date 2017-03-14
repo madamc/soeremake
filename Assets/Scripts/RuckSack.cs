@@ -405,7 +405,7 @@ public class RuckSack : MonoBehaviour
 
 
                             }
-                            if (!selectingItem && itemSelected)
+                            if (!selectingItem && itemSelected && !sceneItem.isContextMenuButton)
                             {
                                 compareObjectAction(sceneItem);
                             }
@@ -548,7 +548,7 @@ public class RuckSack : MonoBehaviour
 
             if (si.isLookable)
             {
-                addButtonToContextPanel(si, "Look at", LookAtSceneItemWithMenu);
+                addButtonToContextPanel(si, "Look At", LookAtSceneItemWithMenu);
 
 
             }
@@ -628,10 +628,10 @@ public class RuckSack : MonoBehaviour
         //todo Make eat do something
 
         //also, need to learn to recycle.  
-        si.destroyListener();
+        si.destroyListener("Eat");
 
         //Can't figure out how to destroy this thing.  
-      //
+        //
         if (si.isInventory)
         {
             removeInventoryItemWithKeyvalue(si.keyValue);
@@ -660,7 +660,7 @@ public class RuckSack : MonoBehaviour
         jibberJabber.setTextandShow(si.Description);
 
         //also, need to learn to recycle.  
-        si.destroyListener();
+        si.destroyListener("Look At");
         //todo:  this isn't working for some reason.  
 
 
@@ -671,8 +671,18 @@ public class RuckSack : MonoBehaviour
     public void TalkToSceneItemWithMenu(SceneItem si)
     {
 
-        //not implemented
+        jibberJabber.setTextandShow(si.callNextResponse());
+        //also, need to learn to recycle.  
+        si.destroyListener("Talk To");
+        //todo:  this isn't working for some reason.  
 
+
+        clearContextMenuButtons();
+        if (inventorycanvas.activeSelf)
+        {
+            inventorycanvas.SetActive(false);
+        }
+        contextPanel.SetActive(false);
 
     }
 
@@ -709,9 +719,10 @@ public class RuckSack : MonoBehaviour
         //Implement Wait Till animation completed
         //MUST STOP LISTENING
         //also, need to learn to recycle.  
-        si.destroyListener();
+        si.destroyListener("Pick Up");
         //todo:  not sure if this is the right thing to do... probably not
         si.gameObject.SetActive(false);
+        
 
         //todo:  this isn't working for some reason.  
         listOfSelectableGameObjects.Clear();

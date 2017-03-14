@@ -26,6 +26,7 @@ public class SceneItem : MonoBehaviour {
     public string eatMessage;
     public List<String> responses;
     public UnityAction contextButtonClickListener;
+    private int responsecounter = 0;
 
     public void GiveKeyValue(String givenKeyValue)
     {
@@ -68,13 +69,30 @@ public class SceneItem : MonoBehaviour {
 
     private void Awake()
     {
+        if (responses != null)
+        {
+            responses.Reverse();
+           responsecounter = responses.Count-1;
+        }
         
     }
 
-    public void destroyListener()
+    public void destroyListener(string key)
     {
-        EventManager.StopListening(this.name, contextButtonClickListener);
+        EventManager.StopListening(key, contextButtonClickListener);
 
+
+    }
+
+    public string callNextResponse()
+    {
+        if (responsecounter >= 0)
+        {
+            string ret = responses[responsecounter];
+            responsecounter--;
+            return ret;
+        }
+        else return ("The " + Name + " says nothing more");
 
     }
 
