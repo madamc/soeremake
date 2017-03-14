@@ -623,12 +623,17 @@ public class RuckSack : MonoBehaviour
     public void EatSceneItemWithMenu(SceneItem si)
     {
         Debug.Log(si.eatMessage);
+        string action = "Eat";
         jibberJabber.setTextandShow(si.eatMessage);
 
         //todo Make eat do something
 
+        //todo reevaluate
+        //Fire a Trigger, even if nobody is listening.  
+        EventManager.TriggerEvent(action + si.keyValue);
+
         //also, need to learn to recycle.  
-        si.destroyListener("Eat");
+        si.destroyListener(action);
 
         //Can't figure out how to destroy this thing.  
         //

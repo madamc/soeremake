@@ -7,6 +7,7 @@ TagManager:
   - CursorCanvas
   - MouseCursor
   - SelectableObject
+  - part1_scene1_greenknight
   layers:
   - Default
   - TransparentFX
