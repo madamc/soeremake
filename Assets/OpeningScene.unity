@@ -422,7 +422,6 @@ GameObject:
   m_Component:
   - component: {fileID: 539760534}
   - component: {fileID: 539760533}
-  - component: {fileID: 539760532}
   - component: {fileID: 539760531}
   - component: {fileID: 539760530}
   - component: {fileID: 539760536}
@@ -473,48 +472,6 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0.005}
   serializedVersion: 2
   m_Size: {x: 130, y: 60}
---- !u!114 &539760532
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 539760529}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3e5404ab31857043a44a72b2195762f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
-  selectObject: {fileID: 0}
-  spriteRenderer: {fileID: 539760533}
-  spriteImage: {fileID: 0}
-  ruckSack: {fileID: 1038225168}
-  spotlight: {fileID: 711827377}
-  cursorobj: {fileID: 832647309}
 --- !u!212 &539760533
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1302,7 +1259,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1693297251}
   - component: {fileID: 1693297250}
-  - component: {fileID: 1693297249}
   - component: {fileID: 1693297248}
   - component: {fileID: 1693297247}
   - component: {fileID: 1693297246}
@@ -1369,48 +1325,6 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 10}
   serializedVersion: 2
   m_Size: {x: 20, y: 20}
---- !u!114 &1693297249
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1693297245}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3e5404ab31857043a44a72b2195762f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
-  selectObject: {fileID: 0}
-  spriteRenderer: {fileID: 1693297250}
-  spriteImage: {fileID: 0}
-  ruckSack: {fileID: 1038225168}
-  spotlight: {fileID: 711827377}
-  cursorobj: {fileID: 832647309}
 --- !u!212 &1693297250
 SpriteRenderer:
   m_ObjectHideFlags: 0
