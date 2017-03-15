@@ -240,35 +240,6 @@ Camera:
   m_PrefabParentObject: {fileID: 20637103182141926, guid: 36133f7c7594228448ebc18d5dc471e5,
     type: 2}
   m_PrefabInternal: {fileID: 114873597}
---- !u!1 &228036764 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1092071893456772, guid: 6cc5eb4ca68fe9540bfd465b9c6673ec,
-    type: 2}
-  m_PrefabInternal: {fileID: 266333922}
---- !u!114 &228036771
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 228036764}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47cef1ced1eada644ba2591026cd2389, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &228036772
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 228036764}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30aa15c65bd7a7f45b64a105591e39e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isFadingIn: 0
-  alphamax: 255
 --- !u!1001 &266333922
 Prefab:
   m_ObjectHideFlags: 0
@@ -308,14 +279,35 @@ Prefab:
       propertyPath: m_RootOrder
       value: 15
       objectReference: {fileID: 0}
-    - target: {fileID: 1092071893456772, guid: 6cc5eb4ca68fe9540bfd465b9c6673ec, type: 2}
-      propertyPath: m_TagString
-      value: SelectableObject
+    - target: {fileID: 114705100446187344, guid: 6cc5eb4ca68fe9540bfd465b9c6673ec,
+        type: 2}
+      propertyPath: alphamax
+      value: 140
+      objectReference: {fileID: 0}
+    - target: {fileID: 212609523015160066, guid: 6cc5eb4ca68fe9540bfd465b9c6673ec,
+        type: 2}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 212609523015160066, guid: 6cc5eb4ca68fe9540bfd465b9c6673ec,
+        type: 2}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 212609523015160066, guid: 6cc5eb4ca68fe9540bfd465b9c6673ec,
+        type: 2}
+      propertyPath: m_Color.g
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 212609523015160066, guid: 6cc5eb4ca68fe9540bfd465b9c6673ec,
         type: 2}
       propertyPath: m_Color.a
-      value: 0.359
+      value: 0.828
+      objectReference: {fileID: 0}
+    - target: {fileID: 114705100446187344, guid: 6cc5eb4ca68fe9540bfd465b9c6673ec,
+        type: 2}
+      propertyPath: fadespeed
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6cc5eb4ca68fe9540bfd465b9c6673ec, type: 2}
